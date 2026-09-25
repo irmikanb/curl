@@ -163,7 +163,9 @@ function vSet(){const s=D.set;return `<div class="card" style="max-width:560px">
 `<label>QR-код (картинка)</label><input type="file" accept="image/*" onchange="rz(this.files[0],400,d=>{qr=d;toast('QR загружен. Нажмите «Сохранить»')})">${s.qr?`<img src="${s.qr}" style="height:80px;margin-top:8px" alt="">`:''}
 <div style="margin-top:18px"><button class="btn" onclick="sS()">Сохранить</button></div></div>`}
 function sS(){D.set={n:$('#sn').value,p:$('#sp').value,i:$('#si').value,qr};save();toast('Настройки сохранены')}
-function ex(){fdl(new Blob([JSON.stringify(D)],{type:'application/octet-stream'}),'hair-care-backup-'+new Date().toLocaleDateString('en-CA')+'.json');D.meta.lastBackup=Date.now();save();toast('Копия скачивается. Если ничего не произошло, откройте приложение в обычном браузере (Chrome, Safari), а не внутри мессенджера.')}
+async function ex(){const nm='hair-care-backup-'+new Date().toLocaleDateString('en-CA')+'.json',blob=new Blob([JSON.stringify(D)],{type:'application/json'});
+ if(window.showSaveFilePicker){try{const h=await showSaveFilePicker({suggestedName:nm,types:[{description:'Резервная копия',accept:{'application/json':['.json']}}]}),w=await h.createWritable();await w.write(blob);await w.close();D.meta.lastBackup=Date.now();save();return toast('Копия сохранена')}catch(e){if(e&&e.name=='AbortError')return}}
+ fdl(blob,nm);D.meta.lastBackup=Date.now();save();toast('Копия скачивается в папку «Загрузки». Если ничего не произошло, откройте приложение в обычном браузере (Chrome, Safari), а не внутри мессенджера.')}
 function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.meta.lastBackup=Date.now();save();toast('Копия загружена');go('memo')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
 
 /* Предпросмотр и PDF (страницы рисуются на canvas, PDF собирается без библиотек) */
