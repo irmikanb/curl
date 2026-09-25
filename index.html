@@ -52,11 +52,15 @@ dialog{max-height:92vh;overflow:auto}
 .hc b{letter-spacing:.12em;font-size:20px}.hc span{color:var(--mut)}
 .hc.dk{background:var(--ink);color:#fff}.hc.dk span{color:#ffffffb3}
 .mr{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line)}.mr:first-child{border:0}
-.mb{display:flex;gap:8px;flex-wrap:wrap}.mb .btn{padding:8px 14px;min-height:40px}
-@media(max-width:600px){.hm{grid-template-columns:1fr}.hc{min-height:130px}}
+.mb{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto}.mb .btn{padding:8px 14px;min-height:40px;flex:none}
+.se{position:relative}.se input{padding-right:40px}
+.se .xc{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;background:transparent;color:var(--mut);font-size:20px;line-height:1;cursor:pointer;border-radius:6px}
+.se .xc:hover{background:var(--soft)}
+.bk{border:1px solid var(--acc);background:#fdf6f1}
+@media(max-width:600px){.hm{grid-template-columns:1fr}.hc{min-height:130px}.mb{gap:6px}.mb .btn{padding:7px 10px;min-height:36px;font-size:13px}}
 </style></head><body>
 <nav><b class="lg" tabindex="0" role="link" onclick="go('home')" onkeydown="if(event.key=='Enter')go('home')">Hair Care Studio</b>
-<a data-v="memo" onclick="go('memo')">Новая памятка</a><a data-v="prods" onclick="go('prods')">База средств</a><a data-v="cats" onclick="go('cats')">Категории</a><a data-v="set" onclick="go('set')">Настройки</a></nav>
+<a data-v="memo" onclick="go('memo')">Новая памятка</a><a data-v="clients" onclick="go('clients')">Клиенты</a><a data-v="prods" onclick="go('prods')">База средств</a><a data-v="cats" onclick="goCats()">Категории</a><a data-v="set" onclick="go('set')">Настройки</a></nav>
 <main></main><dialog id="dg"></dialog><div id="ts"></div>
 <script>
 const $=s=>document.querySelector(s),
@@ -70,8 +74,9 @@ const seed=()=>({prods:[],set:{},cats:[
  ['НЕСМЫВАЕМЫЙ УХОД','Дополнительное увлажнение, защита и облегчение расчёсывания.','Нанести небольшое количество на влажные или сухие волосы по длине.','После мытья или в течение дня.'],
  ['ТЕРМОЗАЩИТА','Защита волос от высоких температур при укладке.','Нанести на сухие или слегка влажные волосы перед горячей укладкой.','Перед каждой горячей укладкой.']
  ].map((c,i)=>({id:'c'+i,name:c[0],o:i+1,why:c[1],how:c[2],when:c[3]}))});
-let D;try{D=JSON.parse(localStorage.getItem(K))}catch(e){}D=D||seed();D.memos=D.memos||[];
-let M=nm(),qr='',cur=null,curImg='';
+let D;try{D=JSON.parse(localStorage.getItem(K))}catch(e){}D=D||seed();D.memos=D.memos||[];D.meta=D.meta||{};if(!D.meta.installedAt)D.meta.installedAt=Date.now();
+let M=nm(),qr='',cur=null,curImg='',DR=[];
+const needsBackup=()=>Date.now()-(D.meta.lastBackup||D.meta.installedAt)>10*864e5;
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в «Настройках» и удалите лишние фото.')}};
 function toast(t){const e=$('#ts');e.textContent=t;e.style.display='block';clearTimeout(e.t);e.t=setTimeout(()=>e.style.display='none',3200)}
 const sorted=()=>[...D.cats].sort((a,b)=>a.o-b.o),
@@ -81,21 +86,29 @@ function rz(f,max,cb){if(!f)return;const r=new FileReader();r.onload=()=>{const 
 
 function go(v){
  if(v=='set')qr=D.set.qr||'';
- $('main').innerHTML={home:vHome,memo:vMemo,prods:vProds,cats:vCats,set:vSet,pdf:vPdf}[v]();
- if(v=='prods')lp();if(v=='home')lm();
+ if(v=='cats')DR=DR||[];
+ $('main').innerHTML={home:vHome,memo:vMemo,prods:vProds,cats:vCats,set:vSet,pdf:vPdf,clients:vClients}[v]();
+ if(v=='prods')lp();if(v=='clients')lc();
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v==(v=='pdf'?'memo':v)));
  scrollTo(0,0)}
+function goCats(){DR=[];go('cats')}
 
 /* Главная и база памяток */
-function vHome(){return `<div class="eyebrow">Кабинет мастера</div><h1 style="max-width:640px;margin:6px 0 12px">Персональные памятки по уходу за волосами</h1><p class="mut" style="max-width:520px">Отметьте средства из своей базы, добавьте рекомендации и отправьте клиенту готовый PDF.</p>
+function memoRow(m,back){return `<div class="mr"><div><b>${E(m.name)||'Без имени'}</b> <span class="mut">${m.date.split('-').reverse().join('.')}</span></div><div class="mb"><button class="btn l" onclick="om('${m.id}','pdf')">Открыть</button><button class="btn l" onclick="om('${m.id}','memo')">Изменить</button><button class="btn l" onclick="xm('${m.id}','${back||'home'}')">Удалить</button></div></div>`}
+function bkBanner(){return `<div class="card bk"><b>Не забудьте сделать резервную копию</b><p class="mut" style="margin:6px 0 14px">Прошло больше 10 дней с последнего сохранения. Скачайте копию базы, чтобы не потерять данные.</p><button class="btn" onclick="ex()">Скачать копию</button></div>`}
+function vHome(){const top5=[...D.memos].sort((a,b)=>b.upd-a.upd).slice(0,5);
+return `${needsBackup()?bkBanner():''}<div class="eyebrow">Кабинет мастера</div><h1 style="max-width:640px;margin:6px 0 12px">Персональные памятки по уходу за волосами</h1><p class="mut" style="max-width:520px">Отметьте средства из своей базы, добавьте рекомендации и отправьте клиенту готовый PDF.</p>
 <div class="hm"><button class="hc dk" onclick="M=nm();go('memo')"><span style="font-size:28px;line-height:1">+</span><b>НОВАЯ ПАМЯТКА</b><span>Собрать памятку для клиента</span></button><button class="hc" onclick="go('prods')"><b>БАЗА СРЕДСТВ</b><span>Добавить и отредактировать продукты</span></button></div>
-<div class="top" style="margin-top:40px"><h2>Последние памятки</h2><span class="mut">${D.memos.length}</span></div>
-<input id="mq" placeholder="Поиск по имени клиента" oninput="lm()" style="margin:14px 0"><div class="card" style="padding:0" id="ml"></div>`}
-function lm(){const q=$('#mq').value.toLowerCase(),r=[...D.memos].sort((a,b)=>b.upd-a.upd).filter(m=>(m.name||'').toLowerCase().includes(q));
-$('#ml').innerHTML=r.map(m=>`<div class="mr"><div><b>${E(m.name)||'Без имени'}</b> <span class="mut">${m.date.split('-').reverse().join('.')}</span></div><div class="mb"><button class="btn l" onclick="om('${m.id}','pdf')">Открыть</button><button class="btn l" onclick="om('${m.id}','memo')">Изменить</button><button class="btn l" onclick="xm('${m.id}')">Удалить</button></div></div>`).join('')||`<p class="mut" style="padding:20px;margin:0">${D.memos.length?'Ничего не найдено.':'Пока нет памяток. Нажмите «Новая памятка» и сформируйте первую.'}</p>`}
+<div class="top" style="margin-top:40px"><h2>Последние памятки</h2><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">Смотреть все памятки →</a></div>
+<div class="card" style="padding:0">${top5.map(m=>memoRow(m)).join('')||`<p class="mut" style="padding:20px;margin:0">Пока нет памяток. Нажмите «Новая памятка» и сформируйте первую.</p>`}</div>`}
+function vClients(){return `<div class="top"><h1>Клиенты</h1></div>
+<div class="se" style="margin:16px 0;max-width:420px"><input id="cq" placeholder="Поиск по имени клиента" oninput="lc()"><button type="button" class="xc" aria-label="Очистить поиск" onclick="$('#cq').value='';lc();$('#cq').focus()">×</button></div>
+<div class="card" style="padding:0" id="cl"></div>`}
+function lc(){const q=$('#cq').value.toLowerCase(),r=[...D.memos].sort((a,b)=>b.upd-a.upd).filter(m=>(m.name||'').toLowerCase().includes(q));
+$('#cl').innerHTML=r.map(m=>memoRow(m,'clients')).join('')||`<p class="mut" style="padding:20px;margin:0">${D.memos.length?'Ничего не найдено.':'Пока нет памяток. Нажмите «Новая памятка» и сформируйте первую.'}</p>`}
 function sv(){if(!M.id)M.id=uid();M.upd=Date.now();const i=D.memos.findIndex(m=>m.id==M.id),o=JSON.parse(JSON.stringify(M));i<0?D.memos.unshift(o):D.memos[i]=o;save()}
 function om(id,v){M=JSON.parse(JSON.stringify(D.memos.find(m=>m.id==id)));go(v)}
-function xm(id){if(!confirm('Удалить памятку?'))return;D.memos=D.memos.filter(m=>m.id!=id);save();go('home')}
+function xm(id,back){if(!confirm('Удалить памятку?'))return;D.memos=D.memos.filter(m=>m.id!=id);save();go(back||'home')}
 
 /* Новая памятка */
 function vMemo(){return `<div class="card"><div class="eyebrow">Персональный уход за волосами</div><h1>${M.id?'Редактирование памятки':'Новая памятка'}</h1>
@@ -113,7 +126,7 @@ return `<div class="card"><h2 class="ct"><i>0${i+1}</i>${E(c.name)}</h2>`+
 
 /* База средств */
 function vProds(){return `<div class="top"><div><div class="eyebrow">Ваши продукты</div><h1>База средств</h1></div><button class="btn" onclick="edP()">+ Добавить средство</button></div>
-<div class="row" style="margin:18px 0 22px"><input id="q" placeholder="Поиск по названию или артикулу" oninput="lp()" style="flex:3"><select id="fc" onchange="lp()"><option value="">Все категории</option>${sorted().map(c=>`<option value="${c.id}">${E(c.name)}</option>`).join('')}</select></div><div class="grid" id="pl"></div>`}
+<div class="row" style="margin:18px 0 22px"><div class="se" style="flex:3"><input id="q" placeholder="Поиск по названию или артикулу" oninput="lp()"><button type="button" class="xc" aria-label="Очистить поиск" onclick="$('#q').value='';lp();$('#q').focus()">×</button></div><select id="fc" onchange="lp()"><option value="">Все категории</option>${sorted().map(c=>`<option value="${c.id}">${E(c.name)}</option>`).join('')}</select></div><div class="grid" id="pl"></div>`}
 function lp(){const q=$('#q').value.toLowerCase(),f=$('#fc').value,
 r=D.prods.filter(p=>(!f||p.cat==f)&&(p.name+' '+(p.art||'')).toLowerCase().includes(q));
 $('#pl').innerHTML=r.map(p=>`<div class="card" style="padding:14px;margin:0">${p.img?`<img class="big" src="${p.img}" alt="">`:'<div class="big"></div>'}<div class="eyebrow">${E(cn(p.cat))}</div><h3 style="font-size:22px">${E(p.name)}</h3><div class="mut">${p.where?'Где купить: '+E(p.where):''}${p.art?'<br>Артикул: '+E(p.art):''}</div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn l" onclick="edP('${p.id}')">Изменить</button><button class="btn l" aria-label="Удалить" onclick="dP('${p.id}')">Удалить</button></div></div>`).join('')||`<p class="mut">${D.prods.length?'Ничего не найдено.':'База пуста. Нажмите «Добавить средство» и загрузите первое фото.'}</p>`}
@@ -129,24 +142,29 @@ i<0?D.prods.push(o):D.prods[i]=o;save();$('#dg').close();go('prods')}
 function dP(id){const u=D.memos.filter(m=>m.sel[id]).length;if(!confirm(u?'Средство есть в памятках ('+u+'), из них оно пропадёт. Удалить?':'Удалить средство из базы?'))return;D.prods=D.prods.filter(p=>p.id!=id);delete M.sel[id];save();lp()}
 
 /* Категории */
-function vCats(){return `<div class="top"><h1>Категории</h1><button class="btn" onclick="aC()">+ Добавить категорию</button></div><div style="margin-top:22px">`+
-sorted().map(c=>`<div class="card" id="c${c.id}"><div class="row"><div style="flex:5"><label>Название</label><input data-k="name" value="${E(c.name)}"></div><div style="flex:1;min-width:90px"><label>Порядок</label><input data-k="o" type="number" value="${c.o}"></div></div>
+function catCard(c,dom,delFn,saveFn){return `<div class="card" id="c${dom}"><div class="row"><div style="flex:5"><label>Название</label><input data-k="name" value="${E(c.name)}" placeholder="Например: МАСКА"></div><div style="flex:1;min-width:90px"><label>Порядок</label><input data-k="o" type="number" value="${c.o}"></div></div>
 <div class="row"><div><label>Назначение</label><textarea data-k="why">${E(c.why)}</textarea></div><div><label>Как применять</label><textarea data-k="how">${E(c.how)}</textarea></div><div><label>Когда / как часто</label><textarea data-k="when">${E(c.when)}</textarea></div></div>
-<div class="bar"><button class="btn l" onclick="xC('${c.id}')">Удалить</button><button class="btn" onclick="sC('${c.id}')">Сохранить</button></div></div>`).join('')+'</div>'}
-function sC(id){const c=D.cats.find(x=>x.id==id);document.querySelectorAll('#c'+id+' [data-k]').forEach(e=>c[e.dataset.k]=e.dataset.k=='o'?+e.value||0:e.value);save();toast('Категория сохранена')}
-function aC(){D.cats.push({id:uid(),name:'НОВАЯ КАТЕГОРИЯ',o:Math.max(0,...D.cats.map(c=>c.o))+1,why:'',how:'',when:''});save();go('cats')}
+<div class="bar"><button class="btn l" onclick="${delFn}('${dom}')">Удалить</button><button class="btn" onclick="${saveFn}('${dom}')">Сохранить</button></div></div>`}
+function vCats(){return `<div class="top"><h1>Категории</h1><button class="btn" onclick="aC()">+ Добавить категорию</button></div><div style="margin-top:22px">`+
+sorted().map(c=>catCard(c,c.id,'xC','sC')).join('')+
+DR.map(c=>catCard(c,c.tid,'rD','sD')).join('')+'</div>'}
+function rdVals(dom){const o={};document.querySelectorAll('#c'+dom+' [data-k]').forEach(e=>o[e.dataset.k]=e.dataset.k=='o'?+e.value||0:e.value);return o}
+function sC(id){const c=D.cats.find(x=>x.id==id),v=rdVals(id);if(!v.name.trim())return toast('Введите название категории');Object.assign(c,v);save();toast('Категория сохранена')}
+function aC(){DR.push({tid:uid(),name:'',o:Math.max(0,...D.cats.map(c=>c.o),0)+DR.length+1,why:'',how:'',when:''});go('cats')}
+function sD(tid){const idx=DR.findIndex(c=>c.tid==tid);if(idx<0)return;const v=rdVals(tid);if(!v.name.trim())return toast('Введите название категории перед сохранением');D.cats.push({id:uid(),name:v.name,o:v.o,why:v.why,how:v.how,when:v.when});DR.splice(idx,1);save();go('cats');toast('Категория добавлена')}
+function rD(tid){DR=DR.filter(c=>c.tid!=tid);go('cats')}
 function xC(id){if(!confirm('Удалить категорию вместе со средствами из неё?'))return;D.prods=D.prods.filter(p=>p.cat!=id);D.cats=D.cats.filter(c=>c.id!=id);save();go('cats')}
 
 /* Настройки */
-function vSet(){const s=D.set;return `<div class="eyebrow">Контакты в памятке</div><h1>Настройки</h1><div class="card" style="max-width:560px;margin-top:18px">`+
-[['n','Имя мастера'],['p','Телефон'],['i','Instagram'],['w','Сайт']].map(([k,l])=>`<label>${l}</label><input id="s${k}" value="${E(s[k])}">`).join('')+
+function vSet(){const s=D.set;return `<div class="card" style="max-width:560px"><h2>Резервная копия</h2><p class="mut">Данные хранятся в этом браузере на этом устройстве. Скачивайте копию после крупных изменений: по ней можно восстановить базу, если очистится браузер или вы перейдёте на другое устройство.</p>
+<div class="row" style="margin-top:6px"><button class="btn l" onclick="ex()">Скачать копию</button><label class="btn l" style="display:inline-flex;align-items:center;justify-content:center;margin:0">Загрузить копию<input type="file" accept=".json" hidden onchange="im(this.files[0])"></label></div></div>
+<div class="eyebrow">Контакты в памятке</div><h1>Настройки</h1><div class="card" style="max-width:560px;margin-top:18px">`+
+[['n','Имя мастера'],['p','Телефон'],['i','Instagram']].map(([k,l])=>`<label>${l}</label><input id="s${k}" value="${E(s[k])}">`).join('')+
 `<label>QR-код (картинка)</label><input type="file" accept="image/*" onchange="rz(this.files[0],400,d=>{qr=d;toast('QR загружен. Нажмите «Сохранить»')})">${s.qr?`<img src="${s.qr}" style="height:80px;margin-top:8px" alt="">`:''}
-<div style="margin-top:18px"><button class="btn" onclick="sS()">Сохранить</button></div></div>
-<div class="card" style="max-width:560px"><h2>Резервная копия</h2><p class="mut">Данные хранятся в этом браузере на этом компьютере. Скачивайте копию после крупных изменений: по ней можно восстановить базу, если очистится браузер или вы перейдёте на другой компьютер.</p>
-<button class="btn l" onclick="ex()">Скачать копию</button> <label class="btn l" style="display:inline-block;margin:0">Загрузить копию<input type="file" accept=".json" hidden onchange="im(this.files[0])"></label></div>`}
-function sS(){D.set={n:$('#sn').value,p:$('#sp').value,i:$('#si').value,w:$('#sw').value,qr};save();toast('Настройки сохранены')}
-function ex(){fdl(new Blob([JSON.stringify(D)],{type:'application/octet-stream'}),'hair-care-backup-'+new Date().toLocaleDateString('en-CA')+'.json');toast('Копия скачивается. Если ничего не произошло, откройте приложение в обычном браузере (Chrome, Safari), а не внутри мессенджера.')}
-function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;D=d;D.memos=D.memos||[];save();toast('Копия загружена');go('memo')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
+<div style="margin-top:18px"><button class="btn" onclick="sS()">Сохранить</button></div></div>`}
+function sS(){D.set={n:$('#sn').value,p:$('#sp').value,i:$('#si').value,qr};save();toast('Настройки сохранены')}
+function ex(){fdl(new Blob([JSON.stringify(D)],{type:'application/octet-stream'}),'hair-care-backup-'+new Date().toLocaleDateString('en-CA')+'.json');D.meta.lastBackup=Date.now();save();toast('Копия скачивается. Если ничего не произошло, откройте приложение в обычном браузере (Chrome, Safari), а не внутри мессенджера.')}
+function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.meta.lastBackup=Date.now();save();toast('Копия загружена');go('memo')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
 
 /* Предпросмотр и PDF (страницы рисуются на canvas, PDF собирается без библиотек) */
 const PW=1240,PH=1754,MX=110,MT=90,MB=150,CW=PW-2*MX,SE='"Cormorant Garamond",Georgia,serif',SA='Manrope,system-ui,sans-serif',
@@ -189,7 +207,7 @@ async function build(){
   if(M.cc[cat.id]){y+=6;txt(M.cc[cat.id],MX,CW,'400 24px '+SA,MU,34)}});
  if(M.rec){need(160);y+=30;line();y+=30;txt('Рекомендации мастера',MX,CW,'500 46px '+SE,K1,56);y+=10;txt(M.rec,MX,CW,'400 26px '+SA,K1,38)}
  const LK=cv.map(()=>[]),tel=(s.p||'').replace(/[^\d+]/g,''),ig=(s.i||'').replace(/^.*instagram\.com\//i,'').replace(/^@|\/$/g,''),
- it=[[s.n&&'Парикмахер '+s.n,''],[s.p,tel&&'tel:'+tel],[s.i,ig&&'https://instagram.com/'+ig],[s.w,s.w&&(/^https?:/i.test(s.w)?s.w:'https://'+s.w)]].filter(a=>a[0]);
+ it=[[s.n&&'Парикмахер '+s.n,''],[s.p,tel&&'tel:'+tel],[s.i,ig&&'https://instagram.com/'+ig]].filter(a=>a[0]);
  cv.forEach((g,pi)=>{const t=g.getContext('2d');t.textBaseline='top';
   
   
