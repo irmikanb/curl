@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hair Care Studio</title>
+<title>Кудри Дз.</title>
+<meta name="robots" content="noindex,nofollow">
+<!-- © 2026 Irmika. Все права защищены. Программа «Кудри Дз.» создана для Надежды Киреевой. Копирование, изменение и использование третьими лицами без письменного разрешения автора запрещены. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;700&display=swap">
 <style>
 :root{--bg:#f6f4ef;--ink:#24201d;--mut:#7a716a;--acc:#a67c62;--line:#e4ded6;--soft:#efeae3}
@@ -51,18 +53,23 @@ dialog{max-height:92vh;overflow:auto}
 .hc{display:flex;flex-direction:column;gap:8px;justify-content:flex-end;min-height:170px;padding:26px 30px;border:0;border-radius:12px;background:#fff;box-shadow:0 2px 12px #0000000d;cursor:pointer;color:var(--ink);font:inherit;text-align:left;width:100%}
 .hc b{letter-spacing:.12em;font-size:20px}.hc span{color:var(--mut)}
 .hc.dk{background:var(--ink);color:#fff}.hc.dk span{color:#ffffffb3}
+.hc.w{grid-column:1/-1;min-height:110px}
 .mr{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line)}.mr:first-child{border:0}
 .mb{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto}.mb .btn{padding:8px 14px;min-height:40px;flex:none}
 .se{position:relative}.se input{padding-right:40px}
 .se .xc{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;background:transparent;color:var(--mut);font-size:20px;line-height:1;cursor:pointer;border-radius:6px}
 .se .xc:hover{background:var(--soft)}
 .bk{border:1px solid var(--acc);background:#fdf6f1}
+.vl{display:grid;gap:4px;margin-top:10px}
+.cts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
 @media(max-width:600px){.hm{grid-template-columns:1fr}.hc{min-height:130px}.mb{gap:6px}.mb .btn{padding:7px 10px;min-height:36px;font-size:13px}}
 </style></head><body>
-<nav><b class="lg" tabindex="0" role="link" onclick="go('home')" onkeydown="if(event.key=='Enter')go('home')">Hair Care Studio</b>
+<nav><b class="lg" tabindex="0" role="link" onclick="go('home')" onkeydown="if(event.key=='Enter')go('home')">Кудри Дз.</b>
 <a data-v="memo" onclick="go('memo')">Новая памятка</a><a data-v="clients" onclick="go('clients')">Клиенты</a><a data-v="prods" onclick="go('prods')">База средств</a><a data-v="cats" onclick="goCats()">Категории</a><a data-v="set" onclick="go('set')">Настройки</a></nav>
-<main></main><dialog id="dg"></dialog><div id="ts"></div>
+<main></main><footer style="text-align:center;color:var(--mut);font-size:12px;padding:0 16px 28px">© 2026 Irmika · Программа «Кудри Дз.» · Все права защищены</footer><dialog id="dg"></dialog><div id="ts"></div>
 <script>
+/* © 2026 Irmika. Все права защищены. Использование без письменного разрешения автора запрещено. */
 const $=s=>document.querySelector(s),
 E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
 uid=()=>Math.random().toString(36).slice(2,9),K='hcs_v1',
@@ -74,45 +81,137 @@ const seed=()=>({prods:[],set:{},cats:[
  ['НЕСМЫВАЕМЫЙ УХОД','Дополнительное увлажнение, защита и облегчение расчёсывания.','Нанести небольшое количество на влажные или сухие волосы по длине.','После мытья или в течение дня.'],
  ['ТЕРМОЗАЩИТА','Защита волос от высоких температур при укладке.','Нанести на сухие или слегка влажные волосы перед горячей укладкой.','Перед каждой горячей укладкой.']
  ].map((c,i)=>({id:'c'+i,name:c[0],o:i+1,why:c[1],how:c[2],when:c[3]}))});
-let D;try{D=JSON.parse(localStorage.getItem(K))}catch(e){}D=D||seed();D.memos=D.memos||[];D.meta=D.meta||{};if(!D.meta.installedAt)D.meta.installedAt=Date.now();
-let M=nm(),qr='',cur=null,curImg='',DR=[];
-const needsBackup=()=>Date.now()-(D.meta.lastBackup||D.meta.installedAt)>10*864e5;
+let D;try{D=JSON.parse(localStorage.getItem(K))}catch(e){}D=D||seed();D.memos=D.memos||[];D.meta=D.meta||{};D.clients=D.clients||[];D.visits=D.visits||[];if(!D.meta.installedAt)D.meta.installedAt=Date.now();
+let M=nm(),qr='',cur=null,curImg='',DR=[],CC=null,V=null;
+const needsBackup=()=>Date.now()-(D.meta.lastBackup||D.meta.installedAt)>7*864e5;
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в «Настройках» и удалите лишние фото.')}};
 function toast(t){const e=$('#ts');e.textContent=t;e.style.display='block';clearTimeout(e.t);e.t=setTimeout(()=>e.style.display='none',3200)}
 const sorted=()=>[...D.cats].sort((a,b)=>a.o-b.o),
 cn=id=>(D.cats.find(c=>c.id==id)||{}).name||'',
-img=p=>p.img?`<img src="${p.img}" alt="">`:'<span class="ph"></span>';
+img=p=>p.img?`<img src="${p.img}" alt="">`:'<span class="ph"></span>',
+fd=d=>(d||'').split('-').reverse().join('.');
 function rz(f,max,cb){if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.78))};im.src=r.result};r.readAsDataURL(f)}
 
+/* Клиенты: связь памяток с клиентами по имени */
+function cby(n){n=(n||'').trim().toLowerCase();return n?D.clients.find(c=>c.name.trim().toLowerCase()==n):null}
+function lk(m){const n=(m.name||'').trim();if(!n){delete m.cid;return}let c=cby(n);if(!c){c={id:uid(),name:n,phone:'',ig:'',note:'',upd:Date.now()};D.clients.push(c)}m.cid=c.id}
+function mig(){if(D.meta.cm)return;D.memos.forEach(lk);D.meta.cm=1;save()}
+function migV(){let ch=0;D.visits.forEach(v=>{if(!v.svcs){v.svcs=v.svc?[v.svc]:[];v.f=v.svc?{[v.svc]:v.f||{}}:{};delete v.svc;ch=1}});if(ch)save()}
+mig();migV();
+const MASTER={n:'Кудрявый мастер Надежда Киреева',p:'+375298745111',i:'nadia_kireeva_'};
+
 function go(v){
+ if(v=='client'&&!D.clients.some(c=>c.id==CC))v='clients';
  if(v=='set')qr=D.set.qr||'';
  if(v=='cats')DR=DR||[];
- $('main').innerHTML={home:vHome,memo:vMemo,prods:vProds,cats:vCats,set:vSet,pdf:vPdf,clients:vClients}[v]();
+ $('main').innerHTML={home:vHome,memo:vMemo,prods:vProds,cats:vCats,set:vSet,pdf:vPdf,clients:vClients,client:vClient}[v]();
  if(v=='prods')lp();if(v=='clients')lc();
- document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v==(v=='pdf'?'memo':v)));
+ document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v==(v=='pdf'?'memo':v=='client'?'clients':v)));
  scrollTo(0,0)}
 function goCats(){DR=[];go('cats')}
 
 /* Главная и база памяток */
-function memoRow(m,back){return `<div class="mr"><div><b>${E(m.name)||'Без имени'}</b> <span class="mut">${m.date.split('-').reverse().join('.')}</span></div><div class="mb"><button class="btn l" onclick="om('${m.id}','pdf')">Открыть</button><button class="btn l" onclick="om('${m.id}','memo')">Изменить</button><button class="btn l" onclick="xm('${m.id}','${back||'home'}')">Удалить</button></div></div>`}
-function bkBanner(){return `<div class="card bk"><b>Не забудьте сделать резервную копию</b><p class="mut" style="margin:6px 0 14px">Прошло больше 10 дней с последнего сохранения. Скачайте копию базы, чтобы не потерять данные.</p><button class="btn" onclick="ex()">Скачать копию</button></div>`}
+function memoRow(m,back){return `<div class="mr"><div><b>${E(m.name)||'Без имени'}</b> <span class="mut">${fd(m.date)}</span></div><div class="mb"><button class="btn l" onclick="om('${m.id}','pdf')">Открыть</button><button class="btn l" onclick="om('${m.id}','memo')">Изменить</button><button class="btn l" onclick="xm('${m.id}','${back||'home'}')">Удалить</button></div></div>`}
+function bkBanner(){return `<div class="card bk"><b>Не забудьте сделать резервную копию</b><p class="mut" style="margin:6px 0 14px">Прошло больше 7 дней с последнего сохранения. Скачайте копию базы, чтобы не потерять клиентов, журнал визитов и памятки.</p><button class="btn" onclick="ex()">Скачать копию</button></div>`}
 function vHome(){const top5=[...D.memos].sort((a,b)=>b.upd-a.upd).slice(0,5);
 return `${needsBackup()?bkBanner():''}<div class="eyebrow">Кабинет мастера</div><h1 style="max-width:640px;margin:6px 0 12px">Персональные памятки по уходу за волосами</h1><p class="mut" style="max-width:520px">Отметьте средства из своей базы, добавьте рекомендации и отправьте клиенту готовый PDF.</p>
-<div class="hm"><button class="hc dk" onclick="M=nm();go('memo')"><span style="font-size:28px;line-height:1">+</span><b>НОВАЯ ПАМЯТКА</b><span>Собрать памятку для клиента</span></button><button class="hc" onclick="go('prods')"><b>БАЗА СРЕДСТВ</b><span>Добавить и отредактировать продукты</span></button></div>
-<div class="top" style="margin-top:40px"><h2>Последние памятки</h2><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">Смотреть все памятки →</a></div>
+<div class="hm"><button class="hc dk" onclick="M=nm();go('memo')"><span style="font-size:28px;line-height:1">+</span><b>НОВАЯ ПАМЯТКА</b><span>Собрать памятку для клиента</span></button><button class="hc" onclick="go('prods')"><b>БАЗА СРЕДСТВ</b><span>Добавить и отредактировать продукты</span></button><button class="hc w" onclick="go('clients')"><b>КЛИЕНТЫ</b><span>Карточки клиентов и журнал визитов: составы, инструменты, результат</span></button></div>
+<div class="top" style="margin-top:40px"><h2>Последние памятки</h2><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">Все клиенты →</a></div>
 <div class="card" style="padding:0">${top5.map(m=>memoRow(m)).join('')||`<p class="mut" style="padding:20px;margin:0">Пока нет памяток. Нажмите «Новая памятка» и сформируйте первую.</p>`}</div>`}
-function vClients(){return `<div class="top"><h1>Клиенты</h1></div>
+function vClients(){return `${needsBackup()?bkBanner():''}<div class="top"><h1>Клиенты</h1><button class="btn" onclick="edC()">+ Добавить клиента</button></div>
 <div class="se" style="margin:16px 0;max-width:420px"><input id="cq" placeholder="Поиск по имени клиента" oninput="lc()"><button type="button" class="xc" aria-label="Очистить поиск" onclick="$('#cq').value='';lc();$('#cq').focus()">×</button></div>
 <div class="card" style="padding:0" id="cl"></div>`}
-function lc(){const q=$('#cq').value.toLowerCase(),r=[...D.memos].sort((a,b)=>b.upd-a.upd).filter(m=>(m.name||'').toLowerCase().includes(q));
-$('#cl').innerHTML=r.map(m=>memoRow(m,'clients')).join('')||`<p class="mut" style="padding:20px;margin:0">${D.memos.length?'Ничего не найдено.':'Пока нет памяток. Нажмите «Новая памятка» и сформируйте первую.'}</p>`}
-function sv(){if(!M.id)M.id=uid();M.upd=Date.now();const i=D.memos.findIndex(m=>m.id==M.id),o=JSON.parse(JSON.stringify(M));i<0?D.memos.unshift(o):D.memos[i]=o;save()}
+function lastV(id){return D.visits.filter(v=>v.cid==id).sort((a,b)=>b.date.localeCompare(a.date))[0]}
+function lc(){const q=$('#cq').value.toLowerCase(),r=[...D.clients].sort((a,b)=>a.name.localeCompare(b.name,'ru')).filter(c=>c.name.toLowerCase().includes(q));
+$('#cl').innerHTML=r.map(c=>{const lv=lastV(c.id),mc=D.memos.filter(m=>m.cid==c.id).length;
+return `<div class="mr"><div><b>${E(c.name)}</b><br><span class="mut">${lv?'Последний визит: '+fd(lv.date)+' · '+E(lv.svcs.join(', ')):'Визитов пока нет'}${mc?' · памяток: '+mc:''}</span></div><div class="mb"><button class="btn l" onclick="oc('${c.id}')">Открыть</button></div></div>`}).join('')||`<p class="mut" style="padding:20px;margin:0">${D.clients.length?'Ничего не найдено.':'Пока нет клиентов. Нажмите «Добавить клиента» или сформируйте первую памятку.'}</p>`}
+function nph(v){let d=String(v||'').replace(/\D/g,'');if(!d)return '';
+ if(d.length==11&&d.startsWith('80'))d='375'+d.slice(2);else if(d.length==9)d='375'+d;
+ return '+'+d}
+function fph(p){return p.replace(/^\+375(\d{2})(\d{3})(\d{2})(\d{2})$/,'+375 $1 $2-$3-$4')}
+function nsoc(v,re){return String(v||'').trim().replace(re,'').split(/[\/?#]/)[0].replace(/^@/,'').trim()}
+const nig=v=>nsoc(v,/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//i),
+ntl=v=>nsoc(v,/^(?:https?:\/\/)?(?:www\.)?(?:t|telegram)\.me\//i);
+function cts(c){const p=nph(c.phone),i=nig(c.ig),t=ntl(c.tl),a=[];
+ if(p)a.push(`<a class="btn l" href="tel:${p}">Позвонить ${E(fph(p))}</a>`);
+ if(i)a.push(`<a class="btn l" href="https://instagram.com/${encodeURIComponent(i)}" target="_blank" rel="noopener">Instagram @${E(i)}</a>`);
+ if(t)a.push(`<a class="btn l" href="https://t.me/${encodeURIComponent(t)}" target="_blank" rel="noopener">Telegram @${E(t)}</a>`);
+ return a.length?`<div class="cts">${a.join('')}</div>`:''}
+function pm(e){let d=e.value.replace(/\D/g,'');
+ if(d.length<=3&&'375'.startsWith(d))d='';else if(d.startsWith('375'))d=d.slice(3);else if(d.startsWith('80'))d=d.slice(2);
+ d=d.slice(0,9);let r='+375';
+ if(d.length)r+=' '+d.slice(0,2);if(d.length>2)r+=' '+d.slice(2,5);if(d.length>5)r+='-'+d.slice(5,7);if(d.length>7)r+='-'+d.slice(7,9);
+ e.value=r}
+function oc(id){CC=id;go('client')}
+function sv(){lk(M);if(!M.id)M.id=uid();M.upd=Date.now();const i=D.memos.findIndex(m=>m.id==M.id),o=JSON.parse(JSON.stringify(M));i<0?D.memos.unshift(o):D.memos[i]=o;save()}
 function om(id,v){M=JSON.parse(JSON.stringify(D.memos.find(m=>m.id==id)));go(v)}
 function xm(id,back){if(!confirm('Удалить памятку?'))return;D.memos=D.memos.filter(m=>m.id!=id);save();go(back||'home')}
 
+/* Карточка клиента и журнал визитов */
+const SV=['Завивка','Уход','Окрашивание','Стрижка'],
+FD={'Завивка':[['comp','Состав'],['tools','Инструменты (тип и размер)'],['time','Время выдержки']],
+'Уход':[['what','Что сделано'],['comp','Состав / средство']],
+'Окрашивание':[['comp','Состав (краска, оттенок, оксид)'],['what','Техника / зоны'],['time','Время выдержки']],
+'Стрижка':[['what','Что сделано (форма, длина)']]},
+RT=[['','—'],['5','5 — отлично'],['4','4 — хорошо'],['3','3 — средне'],['2','2 — плохо'],['1','1 — очень плохо']],
+opt=(a,v)=>a.map(([k,l])=>`<option value="${k}" ${k==v?'selected':''}>${l}</option>`).join(''),
+uq=k=>[...new Set(D.visits.flatMap(v=>Object.values(v.f||{}).map(o=>o[k])).filter(Boolean))];
+function vClient(){const c=D.clients.find(x=>x.id==CC),
+vs=D.visits.filter(x=>x.cid==c.id).sort((a,b)=>b.date.localeCompare(a.date)),
+ms=D.memos.filter(m=>m.cid==c.id).sort((a,b)=>b.upd-a.upd),nx=vs.find(v=>v.next);
+return `<p><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">← Все клиенты</a></p>
+<div class="card"><div class="top"><div><div class="eyebrow">Карточка клиента</div><h1>${E(c.name)}</h1></div><div class="mb"><button class="btn l" onclick="edC('${c.id}')">Изменить</button><button class="btn l" onclick="xK('${c.id}')">Удалить</button></div></div>
+${cts(c)}
+${c.note?`<p style="margin:12px 0 0;white-space:pre-wrap">${E(c.note)}</p>`:''}
+${nx?`<p class="acc" style="margin:12px 0 0"><b>Следующая коррекция: ${fd(nx.next)}</b></p>`:''}</div>
+<div class="top" style="margin:28px 0 14px"><h2>Журнал визитов</h2><button class="btn" onclick="edV()">+ Новый визит</button></div>
+${vs.map(visitCard).join('')||'<div class="card"><p class="mut" style="margin:0">Визитов пока нет. Нажмите «Новый визит», чтобы записать первый.</p></div>'}
+<div class="top" style="margin:28px 0 14px"><h2>Памятки</h2><button class="btn" onclick="mcl()">+ Памятка для клиента</button></div>
+<div class="card" style="padding:0">${ms.map(m=>memoRow(m,'client')).join('')||'<p class="mut" style="padding:20px;margin:0">Памяток для этого клиента пока нет.</p>'}</div>`}
+function visitCard(v){const ss=SV.filter(x=>v.svcs.includes(x)),
+fs=ss.map(x=>`<div><b>${x}</b>${FD[x].map(([k,l])=>v.f[x]&&v.f[x][k]?`<div><span class="mut">${l}:</span> ${E(v.f[x][k])}</div>`:'').join('')}</div>`).join(''),
+rt=[v.rm&&'Оценка мастера: '+v.rm+'/5',v.rc&&'Оценка клиента: '+v.rc+'/5'].filter(Boolean).join(' · ');
+return `<div class="card"><div class="top" style="align-items:flex-start"><div><b style="font-size:17px">${fd(v.date)}</b> <span class="acc">${E(ss.join(' · '))}</span></div><div class="mb"><button class="btn l" onclick="edV('${v.id}')">Изменить</button><button class="btn l" onclick="xV('${v.id}')">Удалить</button></div></div>
+<div class="vl">${fs}${rt?`<div>${rt}</div>`:''}${v.com?`<div style="white-space:pre-wrap"><span class="mut">Комментарий:</span> ${E(v.com)}</div>`:''}${v.next?`<div class="acc">Следующая коррекция: ${fd(v.next)}</div>`:''}</div></div>`}
+function mcl(){const c=D.clients.find(x=>x.id==CC);M=nm();M.name=c.name;M.cid=c.id;go('memo')}
+function edC(id){const c=D.clients.find(x=>x.id==id)||{};
+$('#dg').innerHTML=`<h2>${id?'Изменить':'Новый'} клиент</h2><label>Имя</label><input id="kn" value="${E(c.name)}"><label>Телефон</label><input id="kp" type="tel" inputmode="numeric" maxlength="17" oninput="pm(this)" value="${c.phone?E(fph(nph(c.phone))):'+375 '}" placeholder="+375 29 123-45-67">
+<label>Instagram</label><input id="ki" value="${E(nig(c.ig))}" placeholder="@имя или ссылка на профиль">
+<label>Telegram</label><input id="kg" value="${E(ntl(c.tl))}" placeholder="@имя или ссылка t.me/…">
+<p class="mut" style="margin:8px 0 0;font-size:13px">В Instagram и Telegram можно вставить ссылку целиком, приложение возьмёт имя профиля само.</p>
+<label>Заметка (тип и пористость волос, аллергии, важное)</label><textarea id="kt">${E(c.note)}</textarea>
+<div class="bar"><button class="btn l" onclick="$('#dg').close()">Отмена</button><button class="btn" onclick="sCl('${id||''}')">Сохранить</button></div>`;$('#dg').showModal()}
+function sCl(id){const n=$('#kn').value.trim();if(!n)return toast('Введите имя клиента');
+const d=D.clients.find(x=>x.id==id),o=d||{id:uid()},dup=cby(n);
+if(dup&&dup.id!=o.id)return toast('Клиент с таким именем уже есть');
+const p0=nph($('#kp').value),ph=p0=='+375'?'':p0;if(ph&&ph.startsWith('+375')?ph.length!=13:ph&&(ph.length<10||ph.length>16))return toast('Введите номер полностью: +375 и 9 цифр');
+Object.assign(o,{name:n,phone:ph,ig:nig($('#ki').value),tl:ntl($('#kg').value),note:$('#kt').value,upd:Date.now()});
+if(!d)D.clients.push(o);else D.memos.forEach(m=>{if(m.cid==o.id)m.name=n});
+save();$('#dg').close();CC=o.id;go('client')}
+function xK(id){const a=D.visits.filter(v=>v.cid==id).length,b=D.memos.filter(m=>m.cid==id).length;
+if(!confirm('Удалить клиента вместе с журналом визитов ('+a+') и памятками ('+b+')?'))return;
+D.visits=D.visits.filter(v=>v.cid!=id);D.memos=D.memos.filter(m=>m.cid!=id);D.clients=D.clients.filter(c=>c.id!=id);save();go('clients')}
+function edV(id){const o=D.visits.find(x=>x.id==id);
+V=o?JSON.parse(JSON.stringify(o)):{id:null,cid:CC,date:new Date().toLocaleDateString('en-CA'),svcs:[],f:{},rm:'',rc:'',com:'',next:''};V.f=V.f||{};V.svcs=V.svcs||[];
+$('#dg').innerHTML=`<h2>${id?'Изменить':'Новый'} визит</h2><label>Дата</label><input type="date" value="${V.date}" oninput="V.date=this.value">
+<label>Услуги (можно отметить несколько)</label><div style="display:grid;gap:8px">${SV.map(x=>`<label class="pi"><input type="checkbox" ${V.svcs.includes(x)?'checked':''} onchange="tg('${x}',this.checked)"><b>${x}</b></label>`).join('')}</div><div id="vf"></div>
+<div class="row"><div><label>Оценка мастера</label><select onchange="V.rm=this.value">${opt(RT,V.rm)}</select></div><div><label>Оценка клиента</label><select onchange="V.rc=this.value">${opt(RT,V.rc)}</select></div></div>
+<label>Комментарий (что учесть в следующий раз)</label><textarea oninput="V.com=this.value">${E(V.com)}</textarea>
+<label>Следующая коррекция (дата)</label><input type="date" value="${V.next||''}" oninput="V.next=this.value">
+<datalist id="dlc">${uq('comp').map(x=>`<option value="${E(x)}">`).join('')}</datalist><datalist id="dlt">${uq('tools').map(x=>`<option value="${E(x)}">`).join('')}</datalist>
+<div class="bar"><button class="btn l" onclick="$('#dg').close()">Отмена</button><button class="btn" onclick="sV()">Сохранить</button></div>`;vf();$('#dg').showModal()}
+function tg(x,on){V.svcs=on?[...V.svcs,x]:V.svcs.filter(y=>y!=x);vf()}
+function vf(){$('#vf').innerHTML=SV.filter(x=>V.svcs.includes(x)).map(x=>`<div style="margin-top:18px;border-top:1px solid var(--line)"><div class="eyebrow" style="margin-top:12px">${x}</div>${FD[x].map(([k,l])=>`<label>${l}</label><input ${k=='comp'?'list="dlc"':k=='tools'?'list="dlt"':''} value="${E((V.f[x]||{})[k])}" oninput="(V.f['${x}']=V.f['${x}']||{})['${k}']=this.value">`).join('')}</div>`).join('')}
+function sV(){if(!V.date)return toast('Укажите дату');if(!V.svcs.length)return toast('Отметьте хотя бы одну услугу');
+const svcs=SV.filter(x=>V.svcs.includes(x)),f={};
+svcs.forEach(x=>{const o={};FD[x].forEach(([k])=>{const t=(V.f[x]||{})[k];if(t)o[k]=t});if(Object.keys(o).length)f[x]=o});
+const o={id:V.id||uid(),cid:V.cid,date:V.date,svcs,f,rm:V.rm,rc:V.rc,com:V.com,next:V.next},i=D.visits.findIndex(x=>x.id==o.id);
+i<0?D.visits.push(o):D.visits[i]=o;save();$('#dg').close();go('client')}
+function xV(id){if(!confirm('Удалить запись о визите?'))return;D.visits=D.visits.filter(v=>v.id!=id);save();go('client')}
+
 /* Новая памятка */
 function vMemo(){return `<div class="card"><div class="eyebrow">Персональный уход за волосами</div><h1>${M.id?'Редактирование памятки':'Новая памятка'}</h1>
-<div class="row"><div><label>Имя клиента</label><input value="${E(M.name)}" oninput="M.name=this.value" placeholder="Анна Иванова"></div>
+<div class="row"><div><label>Имя клиента</label><input list="dcn" value="${E(M.name)}" oninput="M.name=this.value" placeholder="Анна Иванова"><datalist id="dcn">${D.clients.map(c=>`<option value="${E(c.name)}">`).join('')}</datalist></div>
 <div><label>Дата</label><input type="date" value="${M.date}" oninput="M.date=this.value"></div></div>
 <label>Примечание мастера</label><textarea oninput="M.note=this.value" placeholder="Короткое вступление для клиента">${E(M.note)}</textarea></div>
 <div class="eyebrow" style="margin:0 0 12px">Категории ухода</div>`+
@@ -158,15 +257,14 @@ function xC(id){if(!confirm('Удалить категорию вместе со
 /* Настройки */
 function vSet(){const s=D.set;return `<div class="card" style="max-width:560px"><h2>Резервная копия</h2><p class="mut">Данные хранятся в этом браузере на этом устройстве. Скачивайте копию после крупных изменений: по ней можно восстановить базу, если очистится браузер или вы перейдёте на другое устройство.</p>
 <div class="row" style="margin-top:6px"><button class="btn l" onclick="ex()">Скачать копию</button><label class="btn l" style="display:inline-flex;align-items:center;justify-content:center;margin:0">Загрузить копию<input type="file" accept=".json" hidden onchange="im(this.files[0])"></label></div></div>
-<div class="eyebrow">Контакты в памятке</div><h1>Настройки</h1><div class="card" style="max-width:560px;margin-top:18px">`+
-[['n','Имя мастера'],['p','Телефон'],['i','Instagram']].map(([k,l])=>`<label>${l}</label><input id="s${k}" value="${E(s[k])}">`).join('')+
+<div class="eyebrow">Оформление памятки</div><h1>Настройки</h1><div class="card" style="max-width:560px;margin-top:18px">`+
 `<label>QR-код (картинка)</label><input type="file" accept="image/*" onchange="rz(this.files[0],400,d=>{qr=d;toast('QR загружен. Нажмите «Сохранить»')})">${s.qr?`<img src="${s.qr}" style="height:80px;margin-top:8px" alt="">`:''}
 <div style="margin-top:18px"><button class="btn" onclick="sS()">Сохранить</button></div></div>`}
-function sS(){D.set={n:$('#sn').value,p:$('#sp').value,i:$('#si').value,qr};save();toast('Настройки сохранены')}
+function sS(){D.set={qr};save();toast('Настройки сохранены')}
 async function ex(){const nm='hair-care-backup-'+new Date().toLocaleDateString('en-CA')+'.json',blob=new Blob([JSON.stringify(D)],{type:'application/json'});
  if(window.showSaveFilePicker){try{const h=await showSaveFilePicker({suggestedName:nm,types:[{description:'Резервная копия',accept:{'application/json':['.json']}}]}),w=await h.createWritable();await w.write(blob);await w.close();D.meta.lastBackup=Date.now();save();return toast('Копия сохранена')}catch(e){if(e&&e.name=='AbortError')return}}
  fdl(blob,nm);D.meta.lastBackup=Date.now();save();toast('Копия скачивается в папку «Загрузки». Если ничего не произошло, откройте приложение в обычном браузере (Chrome, Safari), а не внутри мессенджера.')}
-function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.meta.lastBackup=Date.now();save();toast('Копия загружена');go('memo')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
+function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.clients=D.clients||[];D.visits=D.visits||[];D.meta.lastBackup=Date.now();mig();migV();save();toast('Копия загружена');go('memo')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
 
 /* Предпросмотр и PDF (страницы рисуются на canvas, PDF собирается без библиотек) */
 const PW=1240,PH=1754,MX=110,MT=90,MB=150,CW=PW-2*MX,SE='"Cormorant Garamond",Georgia,serif',SA='Manrope,system-ui,sans-serif',
@@ -174,7 +272,8 @@ K1='#24201d',AC='#a67c62',MU='#7a716a',BG='#f6f4ef',LN='#e4ded6';
 let PB=null;
 const fn=()=>('Памятка по уходу за волосами '+M.name).trim().replace(/[\\/:*?"<>|]/g,'')+'.pdf',
 loadImg=s=>new Promise(r=>{if(!s)return r(null);const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=s});
-function vPdf(){setTimeout(mk,30);return `<div class="top"><div><div class="eyebrow">Предпросмотр PDF</div><h1>${E(M.name)||'Памятка'}</h1></div><div id="pa" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn l" onclick="go('memo')">Назад к редактированию</button></div></div><p class="mut" id="pm">Собираю PDF…</p><div id="pp"></div>`}
+function vPdf(){setTimeout(mk,30);const c=D.clients.find(x=>x.id==M.cid),nm0=E(M.name)||'Памятка';
+return `<div class="top"><div><div class="eyebrow">Предпросмотр PDF</div><h1>${c?`<a onclick="oc('${c.id}')" style="cursor:pointer;color:inherit" title="Открыть карточку клиента">${nm0}</a>`:nm0}</h1></div><div id="pa" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn l" onclick="go('memo')">Назад к редактированию</button>${c?`<button class="btn l" onclick="oc('${c.id}')">К клиенту</button>`:`<button class="btn l" onclick="go('clients')">Все клиенты</button>`}</div></div><p class="mut" id="pm">Собираю PDF…</p><div id="pp"></div>`}
 async function build(){
  const s=D.set,cs=sorted().filter(c=>D.prods.some(p=>p.cat==c.id&&M.sel[p.id])),IM={},cv=[];
  try{await Promise.all([document.fonts.load('500 40px "Cormorant Garamond"'),document.fonts.load('400 24px Manrope'),document.fonts.load('700 24px Manrope')])}catch(e){}
@@ -208,8 +307,8 @@ async function build(){
   D.prods.filter(p=>p.cat==cat.id&&M.sel[p.id]).forEach(card);
   if(M.cc[cat.id]){y+=6;txt(M.cc[cat.id],MX,CW,'400 24px '+SA,MU,34)}});
  if(M.rec){need(160);y+=30;line();y+=30;txt('Рекомендации мастера',MX,CW,'500 46px '+SE,K1,56);y+=10;txt(M.rec,MX,CW,'400 26px '+SA,K1,38)}
- const LK=cv.map(()=>[]),tel=(s.p||'').replace(/[^\d+]/g,''),ig=(s.i||'').replace(/^.*instagram\.com\//i,'').replace(/^@|\/$/g,''),
- it=[[s.n&&'Парикмахер '+s.n,''],[s.p,tel&&'tel:'+tel],[s.i,ig&&'https://instagram.com/'+ig]].filter(a=>a[0]);
+ const LK=cv.map(()=>[]),
+ it=[[MASTER.n,''],[fph(MASTER.p),'tel:'+MASTER.p],['@'+MASTER.i,'https://instagram.com/'+MASTER.i]];
  cv.forEach((g,pi)=>{const t=g.getContext('2d');t.textBaseline='top';
   
   
