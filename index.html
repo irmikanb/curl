@@ -114,7 +114,7 @@ const seed=()=>({prods:[],set:{},cats:[
 let D;try{D=JSON.parse(localStorage.getItem(K))}catch(e){}D=D||seed();D.memos=D.memos||[];D.meta=D.meta||{};D.clients=D.clients||[];D.visits=D.visits||[];if(!D.meta.installedAt)D.meta.installedAt=Date.now();
 let M=nm(),qr='',cur=null,curImg='',DR=[],CC=null,V=null,CV='';
 /* GOOGLE ДИСК: сюда вставляется Client ID из Google Cloud (вида 123-abc.apps.googleusercontent.com) */
-const GCID='',GSC='https://www.googleapis.com/auth/drive.appdata',GFN='kudri-dz-base.json',GK='hcs_drive';
+const GCID='97625365834-ohm2fvlj39cgcirfl1uv2ov4j1dqbsjt.apps.googleusercontent.com',GSC='https://www.googleapis.com/auth/drive.appdata',GFN='kudri-dz-base.json',GK='hcs_drive';
 let DS={},GT=null,GC=null,GP=null,gbusy=false,gtm=null,gck=false,SQ=0,DK=[];try{DS=JSON.parse(localStorage.getItem(GK))||{}}catch(e){DS={}}
 const needsBackup=()=>!DS.on&&Date.now()-(D.meta.lastBackup||D.meta.installedAt)>7*864e5;
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в разделе «Резервная копия» и удалите лишние фото.')}if(!SQ)dsMark()};
