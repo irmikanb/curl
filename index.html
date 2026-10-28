@@ -3,13 +3,13 @@
 <title>Кудри Дз.</title>
 <meta name="robots" content="noindex,nofollow">
 <!-- © 2026 Irmika. Все права защищены. Программа «Кудри Дз.» создана для Надежды Киреевой. Копирование, изменение и использование третьими лицами без письменного разрешения автора запрещены. -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Manrope:wght@400;500;600;700&display=swap">
 <style>
 /* ЦВЕТА ПРИЛОЖЕНИЯ. Прежняя палитра: --bg:#f6f4ef; --mut:#7a716a; --acc:#a67c62; --line:#e4ded6; --soft:#efeae3; --bd:#e4ded6; --bk:#fdf6f1 */
 :root{--bg:#FCF6EE;--ink:#231814;--mut:#78645B;--acc:#AF5331;--line:#E1D5CA;--soft:#F3E5D6;--bd:#DBCFC4;--bk:#F3E5D6;--btn:#AF5331;--card:#FFFDFA}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Manrope,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-h1,h2,h3,.serif,nav b{font-family:Fraunces,Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.01em;margin:0}
+h1,h2,h3,.serif,nav b{font-family:Lora,Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.01em;margin:0}
 /* ТИПОГРАФИКА: заголовок страницы 34/28, раздела 24/22 (Cormorant); название в списке 15 жирность 600; текст 15; второстепенное 13; подпись-eyebrow 11 капсом; поля и кнопки 13–14 */
 h1{font-size:34px;line-height:1.15}h2{font-size:24px}
 b{font-weight:600}.sm{font-size:13px}
@@ -133,7 +133,7 @@ input[type=checkbox]{-webkit-appearance:none;appearance:none;width:22px;height:2
 input[type=checkbox]:checked{background:var(--acc)}
 input[type=checkbox]:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
 #vf>div{background:var(--soft);border-radius:18px;padding:6px 16px 18px;border-top:0!important;margin-top:16px!important}
-#vf .eyebrow{font:500 20px Fraunces,Georgia,serif;text-transform:none;letter-spacing:0;color:var(--ink)}
+#vf .eyebrow{font:500 20px Lora,Georgia,serif;text-transform:none;letter-spacing:0;color:var(--ink)}
 #vf input,#vf textarea{background:var(--card)}
 @media(max-width:600px){h1{font-size:30px}nav b{font-size:24px}}
 
@@ -142,6 +142,70 @@ input[type=checkbox]:checked::after{content:"";width:6px;height:11px;border:soli
 .btn svg.ic{flex:none;margin-right:8px}
 @media(max-width:600px){.mb .btn svg.ic{display:none}}
 .se input{padding-left:42px;background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2378645B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 14px center}
+
+/* ===== Оформление памятки по макету Lovable: палитра, плашки-категории, строки средств ===== */
+:root{--bg:#FBF5ED;--acc:#B25634;--btn:#B25634;--soft:#F3E9DF;--card:#FFFDFA;--bd:#E3D6CA;--line:#E9DDD2;--bk:#F3E9DF}
+.card{box-shadow:0 10px 30px -12px #23181440}
+.btn,input,textarea,select{box-shadow:none}
+.mchips{position:sticky;top:60px;z-index:4;display:flex;gap:8px;overflow-x:auto;padding:10px 0;margin:0 0 14px;background:var(--bg);scrollbar-width:none}
+.mchips::-webkit-scrollbar{display:none}
+.mchip{flex:none;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--ink);border-radius:14px;padding:8px 16px;font-weight:600;font-size:14px;white-space:nowrap}
+.mchip.on{background:var(--btn);border-color:var(--btn);color:#fff;font-weight:700}
+.mcard{scroll-margin-top:130px}
+.pi.mp{background:var(--soft);border:2px solid transparent;border-radius:16px;padding:12px 14px}
+.pi.mp:has(input:checked){border-color:var(--acc);background:#F7E8DC}
+.pi.mp input{order:3;margin-left:auto;width:28px;height:28px;border:2px solid var(--bd);background:var(--card)}
+.pi.mp input:checked{background:var(--acc);border-color:var(--acc)}
+.pi.mp .ph,.pi.mp img{width:64px;height:64px;border-radius:8px;background:#fff;border:0}
+.qb{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.qb>*{flex:1;min-width:150px}
+
+/* ===== Типографика по макету Lovable (размеры сняты по скринам, точность около 1 px) ===== */
+h2.ct{display:flex;align-items:baseline;gap:10px;font:600 22px/1.2 Lora,Georgia,serif;text-transform:none;letter-spacing:0;color:var(--ink);padding:0;border:0;margin:0 0 4px}
+h2.ct i{font:400 26px/1 Lora,Georgia,serif;color:var(--acc);margin:0}
+.cd2{margin:0 0 14px;color:var(--mut);font-size:14px;line-height:1.5}
+.card>h2:not(.ct){font:600 22px/1.2 Lora,Georgia,serif}
+label{font-size:14px;font-weight:600}
+.pi{font-weight:400}
+.pi.mp b{font-size:16px;font-weight:600;line-height:1.3}
+.pi.mp .mut{font-size:12px}
+.mchip{font-size:14px}
+::placeholder{color:#A99A90;opacity:1}
+
+/* ===== Без теней: границы и заливки вместо них ===== */
+*,*::before,*::after{box-shadow:none!important;text-shadow:none!important}
+#pp img{border:1px solid var(--line)}
+
+/* ===== Кнопки-значки вместо текста «Изменить» и «Удалить» ===== */
+.ib{width:44px;height:44px;flex:none;display:inline-flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--bd);background:var(--card);color:var(--ink);border-radius:14px;cursor:pointer}
+.ib:hover{background:var(--soft)}
+.ed{gap:8px;align-items:center}
+
+.pq{flex-direction:row;align-items:center;gap:8px}
+#pa{align-items:center}
+
+/* ===== Значки без кнопки: маленький рисунок, зона нажатия невидимая ===== */
+.ib{width:auto;height:auto;min-width:0;padding:8px;margin:-4px;border:0;background:transparent;border-radius:8px;color:var(--mut)}
+.ib svg{width:18px;height:18px}
+.ib:hover,.ib:active{background:transparent;color:var(--acc)}
+.ed{gap:2px}.pq{gap:2px}
+
+/* ===== Без полос прокрутки у значков ===== */
+.mb,.pq,.ed,.mr{overflow:visible}
+.mb{flex-wrap:wrap;align-items:center}
+
+/* ===== Экран PDF: компактная шапка, две кнопки в ряд, чат значками ===== */
+.pdh{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.pdh .ib{padding:8px;margin:0}
+.pdh .ib svg{width:22px;height:22px}
+.pdt{flex:1;min-width:0}
+.pdt h1{margin:2px 0 0;overflow-wrap:anywhere}
+.grp2{display:flex;gap:0;flex:none}
+.pdb{display:flex;gap:10px;flex-wrap:nowrap;width:100%}
+.pdb .btn{flex:1 1 0;min-width:0;justify-content:center;padding-left:10px;padding-right:10px}
+.cht{display:flex;align-items:center;gap:12px;margin:14px 0 6px}
+.cht>span{flex:1;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.cb{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.cb svg{width:40px;height:40px}
 </style></head><body>
 <nav><b class="lg" tabindex="0" role="link" onclick="go('home')" onkeydown="if(event.key=='Enter')go('home')">Кудри Дз.</b>
 <a data-v="clients" onclick="go('clients')">Клиенты</a><a data-v="prods" onclick="go('prods')">База средств</a><a data-v="cats" onclick="goCats()">Категории</a><a data-v="set" onclick="go('set')">Сохранение базы</a><a id="ds" class="sm" onclick="go('set')" style="margin-left:auto"></a></nav>
@@ -164,8 +228,8 @@ let M=nm(),qr='',cur=null,curImg='',DR=[],CC=null,V=null,CV='',SEL=new Set(),VF=
 /* GOOGLE ДИСК: сюда вставляется Client ID из Google Cloud (вида 123-abc.apps.googleusercontent.com) */
 const GCID='97625365834-ohm2fvlj39cgcirfl1uv2ov4j1dqbsjt.apps.googleusercontent.com',GSC='https://www.googleapis.com/auth/drive.appdata',GFN='kudri-dz-base.json',GK='hcs_drive';
 let DS={},GT=null,GC=null,GP=null,gbusy=false,gtm=null,gck=false,SQ=0,DK=[];try{DS=JSON.parse(localStorage.getItem(GK))||{}}catch(e){DS={}}
-const needsBackup=()=>!DS.on&&Date.now()-(D.meta.lastBackup||D.meta.installedAt)>7*864e5;
-const save=()=>{try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в разделе «Сохранение базы» и удалите лишние фото.')}if(!SQ)dsMark()};
+const needsBackup=()=>{const lb=D.meta.lastBackup||D.meta.installedAt;return (D.meta.chg||0)>lb+6e4&&Date.now()-lb>30*864e5&&Date.now()>(D.meta.bsnz||0)};
+const save=()=>{D.meta.chg=Date.now();try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в разделе «Сохранение базы» и удалите лишние фото.')}if(!SQ)dsMark()};
 function toast(t,ms){const e=$('#ts');e.textContent=t;e.style.display='block';clearTimeout(e.t);e.t=setTimeout(()=>e.style.display='none',ms||3200)}
 const sorted=()=>D.cats.filter(c=>!c.arch).sort((a,b)=>a.o-b.o),
 cn=id=>(D.cats.find(c=>c.id==id)||{}).name||'',
@@ -198,12 +262,13 @@ if(v=='rem'&&!D.clients.some(c=>SEL.has(c.id)))v='mail';
 function goCats(){DR=[];go('cats')}
 
 /* Главная и база памяток */
-function memoRow(m,back){return `<div class="mr"><div><b>${E(m.name)||'Без имени'}</b><br><span class="mut sm">${fd(m.date)}</span></div><div class="mb"><button class="btn l" onclick="om('${m.id}','pdf')">Открыть</button><button class="btn l" onclick="om('${m.id}','memo')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Изменить</button><button class="btn l" onclick="xm('${m.id}','${back||'home'}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>Удалить</button></div></div>`}
-function bkBanner(){return `<div class="card bk bn"><b>Не забудьте сделать резервную копию</b><p class="mut" style="margin:6px 0 14px">Прошло больше 7 дней с последнего сохранения. Скачайте копию базы, чтобы не потерять клиентов, журнал визитов и памятки.</p><button class="btn" onclick="ex()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Скачать копию</button></div>`}
+function memoRow(m,back){return `<div class="mr"><div><b>${E(m.name)||'Без имени'}</b><br><span class="mut sm">${fd(m.date)}</span></div><div class="mb"><button class="btn l" onclick="om('${m.id}','pdf')">Открыть</button><button class="ib" aria-label="Изменить" title="Изменить" onclick="om('${m.id}','memo')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="xm('${m.id}','${back||'home'}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>`}
+function bkBanner(){return `<div class="card bk bn"><b>Пора сохранить копию файлом</b><p class="mut" style="margin:6px 0 14px">Прошёл месяц с последней копии. Скачайте файл с базой на телефон: это запасной вариант, если что-то пойдёт не так.</p><button class="btn" onclick="ex()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Скачать копию</button> <button class="btn l" onclick="bkLater()">Позже</button></div>`}
+function bkLater(){D.meta.bsnz=Date.now()+7*864e5;try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}go('home')}
 function vHome(){const rv=[...D.visits].filter(v=>D.clients.some(c=>c.id==v.cid)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-return `${drCard(1)}${needsBackup()?bkBanner():''}<h1>Кабинет кудрявого мастера</h1>
+return `${drCard(1)}${needsBackup()?bkBanner():''}<h1 style="font-size:24px;line-height:1.25">Приветствую, Надежда</h1>
 <div class="hm"><button class="hc dk" onclick="go('clients')"><b>КЛИЕНТЫ</b><span>Карточки клиентов, журнал визитов и памятки</span></button><button class="hc" onclick="go('prods')"><b>БАЗА СРЕДСТВ</b><span>Добавить и отредактировать продукты</span></button></div>
-<div class="top" style="margin-top:40px"><h2>Последние визиты</h2><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">Все клиенты →</a></div>
+<div class="top" style="margin-top:40px;margin-bottom:16px"><h2>Последние визиты</h2><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">Все клиенты →</a></div>
 <div class="plist">${rv.map(v=>{const c=D.clients.find(x=>x.id==v.cid);return `<button class="pl" onclick="oc('${c.id}')"><span><b>${E(c.name)}</b><br><span class="mut sm">${fd(v.date)} · ${E(v.svcs.join(', '))}${D.memos.some(m=>m.vid==v.id)?' · есть памятка':''}</span></span><span class="chev" aria-hidden="true">›</span></button>`}).join('')||`<p class="mut" style="margin:0">Пока нет визитов. Откройте клиента в разделе «Клиенты» и добавьте первый визит.</p>`}</div>`}
 function vClients(){return `${drCard()}${needsBackup()?bkBanner():''}<div class="top"><h1>Клиенты</h1><div class="ac"><button class="btn" onclick="edC()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить клиента</button><a class="ln" tabindex="0" role="button" style="color:var(--mut)" onclick="gm()" onkeydown="if(event.key=='Enter')gm()">Сделать рассылку</a></div></div>
 <div class="se" style="margin:16px 0;max-width:420px"><input id="cq" placeholder="Поиск по имени клиента" oninput="lc()"><button type="button" class="xc" aria-label="Очистить поиск" onclick="$('#cq').value='';lc();$('#cq').focus()">×</button></div>
@@ -299,7 +364,7 @@ function vClient(){const c=D.clients.find(x=>x.id==CC),
 vs=D.visits.filter(x=>x.cid==c.id).sort((a,b)=>b.date.localeCompare(a.date)),
 os=D.memos.filter(m=>m.cid==c.id&&!D.visits.some(v=>v.id==m.vid)).sort((a,b)=>b.upd-a.upd);
 return `<p><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">← Все клиенты</a></p>
-<div class="card bk"><div class="top"><div><div class="eyebrow" style="color:var(--mut)">Карточка клиента</div><h1>${E(c.name)}${c.vip?VB:''}</h1></div><div class="ed"><a class="ln" tabindex="0" role="button" onclick="edC('${c.id}')" onkeydown="if(event.key=='Enter')edC('${c.id}')">Изменить</a><a class="ln" tabindex="0" role="button" onclick="xK('${c.id}')" onkeydown="if(event.key=='Enter')xK('${c.id}')">Удалить</a></div></div>
+<div class="card bk"><div class="top"><div><div class="eyebrow" style="color:var(--mut)">Карточка клиента</div><h1>${E(c.name)}${c.vip?VB:''}</h1></div><div class="ed"><button class="ib" aria-label="Изменить" title="Изменить" onclick="edC('${c.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="xK('${c.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
 ${cts(c)}
 ${c.note?`<p style="margin:12px 0 0;white-space:pre-wrap">${E(c.note)}</p>`:''}${c.rem?`<p class="mut sm" style="margin:8px 0 0">Напоминание о записи отправлено: ${fd(c.rem)}</p>`:''}
 </div>
@@ -309,11 +374,11 @@ ${os.length?`<h2 style="margin:28px 0 14px">Другие памятки</h2><div
 function fshow(s,k){const a=s[k];if(Array.isArray(a))return a.map(n=>n=='Другое'&&s[k+'_o']?s[k+'_o']:n).join(', ');return a||''}
 function visitCard(v){const ss=SV.filter(x=>v.svcs.includes(x)),
 fs=ss.map(x=>`<div class="vs"><b>${x}</b>${FD[x].map(([k,l])=>{const z=fshow(v.f[x]||{},k);return z?`<div><span class="mut">${l}:</span> ${E(z)}</div>`:''}).join('')}</div>`).join(''),
-rt=[v.rm&&'Оценка мастера: '+v.rm+'/5',v.rc&&'Оценка клиента: '+v.rc+'/5'].filter(Boolean).join(' · '),
+rt=[v.rm&&'<b>Оценка мастера:</b> '+v.rm+'/5',v.rc&&'<b>Оценка клиента:</b> '+v.rc+'/5'].filter(Boolean).join(' · '),
 m=D.memos.find(x=>x.vid==v.id),
 mm=m?`<button class="pl bk" style="margin-top:14px;padding:12px 14px;border-radius:8px" onclick="om('${m.id}','pdf')"><span><b>Памятка</b> <span class="sm" style="color:var(--mut)">${fd(m.date)}</span></span><span class="chev" aria-hidden="true">›</span></button>`
 :`<div style="margin-top:14px"><button class="btn" onclick="mv('${v.id}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>Сделать памятку</button></div>`;
-return `<div class="card"><div class="top" style="align-items:flex-start"><div><b>${fd(v.date)}</b> <b class="acc">${E(ss.join(' · '))}</b></div><div class="mb"><button class="btn l" onclick="edV('${v.id}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Изменить</button><button class="btn l" onclick="xV('${v.id}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>Удалить</button></div></div>
+return `<div class="card"><div class="top" style="align-items:flex-start"><div><b>${fd(v.date)}</b> <b class="acc">${E(ss.join(' · '))}</b></div><div class="mb"><button class="ib" aria-label="Изменить" title="Изменить" onclick="edV('${v.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="xV('${v.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
 <div class="vl">${fs}${(rt||v.com)?`<div class="vm">${rt?`<div>${rt}</div>`:''}${v.com?`<div style="white-space:pre-wrap"><b>Комментарий:</b> ${E(v.com)}</div>`:''}</div>`:''}</div>${mm}</div>`}
 function memoBack(){const c=D.clients.find(x=>x.id==M.cid);return `<button class="btn l" onclick="${c?"oc('"+c.id+"')":"go('clients')"}">${c?'Назад к клиенту':'Все клиенты'}</button>`}
 function mv(vid){const v=D.visits.find(x=>x.id==vid),c=D.clients.find(x=>x.id==v.cid);M=nm();M.name=c.name;M.cid=c.id;M.vid=vid;M.date=v.date;go('memo')}
@@ -363,25 +428,30 @@ i<0?D.visits.push(o):D.visits[i]=o;save();$('#dg').close();go('client')}
 function xV(id){const m=D.memos.some(x=>x.vid==id);ask(m?'Удалить запись о визите вместе с памяткой?':'Удалить запись о визите?',()=>{D.visits=D.visits.filter(v=>v.id!=id);D.memos=D.memos.filter(x=>x.vid!=id);gc();save();go('client')})}
 
 /* Новая памятка */
+function cap(n){n=String(n||'');return n===n.toUpperCase()?n.charAt(0)+n.slice(1).toLowerCase():n}
+function mchipsH(){return memoCats().map(c=>{const n=D.prods.filter(p=>p.cat==c.id&&M.sel[p.id]).length;return `<a class="mchip${n?' on':''}" tabindex="0" role="button" onclick="mgo('${c.id}')" onkeydown="if(event.key=='Enter')mgo('${c.id}')">${E(cap(c.name))}${n?' · '+n:''}</a>`}).join('')}
+function mchips(){const e=$('#mch');if(e)e.innerHTML=mchipsH()}
+function mgo(id){const e=$('#mc-'+id);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}
+function mrs(){ask('Выбранные средства и тексты в этой памятке будут очищены.',()=>{M.sel={};M.cc={};M.rec='';M.note='';go('memo')});const d=$('#dg');d.querySelector('h2').textContent='Начать заново?';d.querySelector('.bar .btn:last-child').textContent='Очистить'}
 function vMemo(){return `<div class="card"><div class="eyebrow">Персональный уход за волосами</div><h1>${M.id?'Редактирование памятки':'Новая памятка'}</h1>
 <div class="row"><div><label>Клиент</label><input value="${E(M.name)}" ${D.clients.some(c=>c.id==M.cid)?'readonly':''} oninput="M.name=this.value" placeholder="Анна Иванова"></div>
 <div><label>Дата</label><input type="date" value="${M.date}" oninput="M.date=this.value"></div></div>
 <label>Примечание мастера</label><textarea oninput="M.note=this.value" placeholder="Короткое вступление для клиента">${E(M.note)}</textarea></div>
-<div class="eyebrow" style="margin:0 0 12px">Категории ухода</div>`+
+<div class="mchips" id="mch">${mchipsH()}</div>`+
 memoCats().map((c,i)=>{const ps=D.prods.filter(p=>p.cat==c.id&&(!p.arch||M.sel[p.id]));
-return `<div class="card"><h2 class="ct"><i>0${i+1}</i>${E(c.name)}</h2>`+
-(ps.length?`<div class="g2">${ps.map(p=>`<label class="pi"><input type="checkbox" ${M.sel[p.id]?'checked':''} onchange="M.sel['${p.id}']=this.checked">${img(p)}<span><b>${E(p.name)}</b>${p.arch?`<br><span class="mut">Удалено из базы, осталось в этой памятке</span>`:''}</span></label>`).join('')}</div>`:'<p class="mut">В этой категории пока нет средств. Добавьте их в «Базе средств».</p>')+
+return `<div class="card mcard" id="mc-${c.id}"><h2 class="ct"><i>0${i+1}</i>${E(cap(c.name))}</h2>${c.why?`<p class="cd2">${E(c.why)}</p>`:''}`+
+(ps.length?`<div class="g2">${ps.map(p=>`<label class="pi mp"><input type="checkbox" ${M.sel[p.id]?'checked':''} onchange="M.sel['${p.id}']=this.checked;mchips()">${img(p)}<span><b>${E(p.name)}</b>${p.arch?`<br><span class="mut">Удалено из базы, осталось в этой памятке</span>`:''}</span></label>`).join('')}</div>`:'<p class="mut">В этой категории пока нет средств. Добавьте их в «Базе средств».</p>')+
 `<label>Комментарий мастера к разделу</label><textarea placeholder="Например: чередовать с маской" oninput="M.cc['${c.id}']=this.value">${E(M.cc[c.id])}</textarea></div>`}).join('')+
-`<div class="card"><h2>Рекомендации мастера</h2><textarea style="min-height:140px;margin-top:12px" oninput="M.rec=this.value" placeholder="• Использовать термозащиту перед каждой горячей укладкой.">${E(M.rec)}</textarea></div>
+`<div class="card"><h2>Рекомендации мастера</h2><textarea style="min-height:140px;margin-top:12px" oninput="M.rec=this.value" placeholder="— Спать на шёлковой наволочке&#10;— Не расчёсывать сухие волосы">${E(M.rec)}</textarea></div>
 <button class="btn" style="width:100%" onclick="sv();go('pdf')">Сформировать памятку</button>
-<p style="text-align:center">${memoBack()}</p>`}
+<div class="qb">${memoBack()}<button class="btn l" onclick="mrs()">Начать заново</button></div>`}
 
 /* База средств */
 function vProds(){return `<div class="top"><div><div class="eyebrow">Ваши продукты</div><h1>База средств</h1></div><button class="btn" onclick="edP()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить средство</button></div>
 <div class="row" style="margin:18px 0 22px"><div class="se" style="flex:3"><input id="q" placeholder="Поиск по названию" oninput="lp()"><button type="button" class="xc" aria-label="Очистить поиск" onclick="$('#q').value='';lp();$('#q').focus()">×</button></div><select id="fc" onchange="lp()"><option value="">Все категории</option>${sorted().map(c=>`<option value="${c.id}">${E(c.name)}</option>`).join('')}</select></div><div class="pgl" id="pl"></div>`}
 function lp(){const q=$('#q').value.toLowerCase(),f=$('#fc').value,
 r=D.prods.filter(p=>!p.arch&&(!f||p.cat==f)&&p.name.toLowerCase().includes(q));
-$('#pl').innerHTML=r.map(p=>`<div class="pr"><div class="pt">${p.img?`<img src="${p.img}" alt="">`:''}</div><div class="px"><div class="eyebrow">${E(cn(p.cat))}</div><h3>${E(p.name)}</h3></div><div class="pq"><button class="btn l" onclick="edP('${p.id}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Изменить</button><a tabindex="0" role="button" onclick="dP('${p.id}')" onkeydown="if(event.key=='Enter')dP('${p.id}')">Удалить</a></div></div>`).join('')||`<p class="mut">${D.prods.some(p=>!p.arch)?'Ничего не найдено.':'База пуста. Нажмите «Добавить средство» и загрузите первое фото.'}</p>`}
+$('#pl').innerHTML=r.map(p=>`<div class="pr"><div class="pt">${p.img?`<img src="${p.img}" alt="">`:''}</div><div class="px"><div class="eyebrow">${E(cn(p.cat))}</div><h3>${E(p.name)}</h3></div><div class="pq"><button class="ib" aria-label="Изменить" title="Изменить" onclick="edP('${p.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="dP('${p.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>`).join('')||`<p class="mut">${D.prods.some(p=>!p.arch)?'Ничего не найдено.':'База пуста. Нажмите «Добавить средство» и загрузите первое фото.'}</p>`}
 function edP(id){ut++;const p=D.prods.find(x=>x.id==id)||{};cur=p.id||null;curImg=p.img||'';
 $('#dg').innerHTML=`<h2>${id?'Изменить':'Добавить'} средство</h2><label>Фото</label><input type="file" accept="image/*" onchange="rz(this.files[0],500,d=>{curImg=d;$('#pv').innerHTML='<img src=&quot;'+d+'&quot; style=&quot;height:90px;margin-top:8px&quot;>'})"><div id="pv">${curImg?`<img src="${curImg}" style="height:90px;margin-top:8px" alt="">`:''}</div>
 <label>Или ссылка на фото в интернете</label><div style="display:flex;gap:8px"><input id="pu" type="url" inputmode="url" placeholder="https://…/photo.jpg" style="min-width:0"><button class="btn l" id="pub" type="button" onclick="ul()" style="flex:none">Загрузить</button></div><p class="mut" style="margin:6px 0 0;font-size:13px">Нужна ссылка именно на картинку: нажмите на фото и удерживайте, затем «Копировать адрес изображения».</p>
@@ -405,7 +475,7 @@ function dP(id){const u=D.memos.filter(m=>m.sel[id]).length;ask(u?'Средст�
 /* Категории */
 function catCard(c,dom,delFn,saveFn){return `<div class="card" id="c${dom}"><div class="row"><div style="flex:5"><label>Название</label><input data-k="name" value="${E(c.name)}" placeholder="Например: МАСКА"></div><div style="flex:1;min-width:90px"><label>Порядок</label><input data-k="o" type="number" value="${c.o}"></div></div>
 <div class="row"><div><label>Назначение</label><textarea data-k="why">${E(c.why)}</textarea></div><div><label>Как применять</label><textarea data-k="how">${E(c.how)}</textarea></div><div><label>Когда / как часто</label><textarea data-k="when">${E(c.when)}</textarea></div></div>
-<div class="bar"><button class="btn l" onclick="${delFn}('${dom}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>Удалить</button><button class="btn" onclick="${saveFn}('${dom}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Сохранить</button></div></div>`}
+<div class="bar"><button class="ib" aria-label="Удалить" title="Удалить" onclick="${delFn}('${dom}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button><button class="btn" onclick="${saveFn}('${dom}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Сохранить</button></div></div>`}
 function vCats(){return `<div class="top"><h1>Категории</h1><button class="btn" onclick="aC()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить категорию</button></div><div style="margin-top:22px">`+
 sorted().map(c=>catCard(c,c.id,'xC','sC')).join('')+
 DR.map(c=>catCard(c,c.tid,'rD','sD')).join('')+'</div>'}
@@ -437,17 +507,22 @@ function applyData(d,lb){D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.clients=D.c
 function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;applyData(d,true);toast('Копия загружена');go('home')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
 
 /* Предпросмотр и PDF (страницы рисуются на canvas, PDF собирается без библиотек) */
-const PW=1240,PH=1754,MX=90,MT=90,MB=150,CW=PW-2*MX,SE='Fraunces,Georgia,serif',SA='Manrope,system-ui,sans-serif',
+const PW=1240,PH=1754,MX=90,MT=90,MB=150,CW=PW-2*MX,SE='Lora,Georgia,serif',SA='Manrope,system-ui,sans-serif',
 /* прежние цвета PDF: AC #a67c62, MU #7a716a, BG #f6f4ef, LN #e4ded6 */
 K1='#231814',AC='#AF5331',MU='#78645B',BG='#F3E5D6',LN='#E1D5CA';
 let PB=null;
 const fn=()=>('Памятка по уходу за волосами '+M.name).trim().replace(/[\\/:*?"<>|]/g,'')+'.pdf',
 loadImg=s=>new Promise(r=>{if(!s)return r(null);const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=s});
-function vPdf(){setTimeout(mk,30);const c=D.clients.find(x=>x.id==M.cid),nm0=E(M.name)||'Памятка';
-return `<div class="top"><div><div class="eyebrow">Предпросмотр PDF</div><h1>${c?`<a onclick="oc('${c.id}')" style="cursor:pointer;color:inherit" title="Открыть карточку клиента">${nm0}</a>`:nm0}</h1></div><div id="pa" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn l" onclick="go('memo')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Редактировать</button>${c?`<button class="btn l" onclick="oc('${c.id}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>К клиенту</button>`:`<button class="btn l" onclick="go('clients')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Все клиенты</button>`}<button class="btn" id="bs" disabled onclick="sh()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>Поделиться</button><button class="btn" id="bd" disabled onclick="dl()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Скачать PDF</button>${M.id?`<button class="btn l" onclick="${c?"CC='"+c.id+"';":''}xm('${M.id}','${c?'client':'clients'}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>Удалить</button>`:''}</div></div>${chatBar(c)}<p class="mut" id="pm">Собираю PDF…</p><div id="pp"></div>`}
+function vPdf(){setTimeout(mk,30);const c=D.clients.find(x=>x.id==M.cid),nm0=E(M.name)||'Памятка',bk=c?`oc('${c.id}')`:`go('clients')`,bl=c?'К клиенту':'Все клиенты';
+return `<div class="pdh"><button class="ib" aria-label="${bl}" title="${bl}" onclick="${bk}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button><div class="pdt"><div class="eyebrow">Предпросмотр PDF</div><h1>${nm0}</h1></div><div class="grp2"><button class="ib" aria-label="Редактировать" title="Редактировать" onclick="go('memo')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>${M.id?`<button class="ib" aria-label="Удалить" title="Удалить" onclick="${c?"CC='"+c.id+"';":''}xm('${M.id}','${c?'client':'clients'}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>`:''}</div></div>
+<div class="pdb" id="pa"><button class="btn" id="bd" disabled onclick="dl()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Скачать</button><button class="btn l" id="bs" disabled onclick="sh()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>Поделиться</button></div>${chatIcons(c)}<p class="mut" id="pm">Собираю PDF…</p><div id="pp"></div>`}
+function chatIcons(c){if(!c)return '';const p=nph(c.phone),t=ntl(c.tl),a=[];
+ if(p)a.push(`<a class="cb" aria-label="Viber" title="Viber" href="viber://chat?number=${encodeURIComponent(p)}">${IV}</a>`);
+ if(t)a.push(`<a class="cb" aria-label="Telegram" title="Telegram" href="https://t.me/${encodeURIComponent(t)}" target="_blank" rel="noopener">${IT}</a>`);
+ return a.length?`<div class="cht"><span>Чат с клиентом</span>${a.join('')}</div>`:`<p class="mut" style="font-size:13px;margin:10px 0 0">Добавьте телефон или Telegram в карточку клиента, и здесь появятся значки чатов.</p>`}
 async function build(){
  const s=D.set,cs=allCats().filter(c=>D.prods.some(p=>p.cat==c.id&&M.sel[p.id])),IM={},cv=[];
- try{await Promise.all([document.fonts.load('500 40px Fraunces'),document.fonts.load('400 24px Manrope'),document.fonts.load('700 24px Manrope')])}catch(e){}
+ try{await Promise.all([document.fonts.load('600 40px Lora'),document.fonts.load('400 24px Manrope'),document.fonts.load('700 24px Manrope')])}catch(e){}
  for(const p of D.prods)if(M.sel[p.id])IM[p.id]=await loadImg(p.img);
  const qi=await loadImg(MASTER.qr);let c,x,y;
  const np=()=>{c=document.createElement('canvas');c.width=PW;c.height=PH;x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,PW,PH);x.textBaseline='top';cv.push(c);y=MT},
@@ -477,12 +552,12 @@ async function build(){
    dl=wrap([cat.why,cat.how,cat.when].filter(Boolean).map(P).join(' '),CW,'400 20px '+SA),
    h0=Math.max(0,...ts.slice(0,2).map(t=>t.h));
   need(46+12+dl.length*28+10+h0+12);if(y>MT)y+=24;
-  x.font='500 32px '+SE;x.fillStyle=AC;x.fillText((i+1)+'. '+cat.name,MX,y);y+=46;
+  x.font='600 32px '+SE;x.fillStyle=AC;x.fillText((i+1)+'. '+cat.name,MX,y);y+=46;
   x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=12;
   dl.forEach(l=>{x.font='400 20px '+SA;x.fillStyle=MU;x.fillText(l,MX,y);y+=28});y+=10;
   for(let k=0;k<ts.length;k+=2){const a=ts[k],b=ts[k+1],h=Math.max(a.h,b?b.h:0);need(h+12);tdraw(a,MX,y,h);if(b)tdraw(b,MX+TW+16,y,h);y+=h+12}
   if(M.cc[cat.id]){need(66);y+=4;x.font='700 15px '+SA;x.fillStyle=MU;x.fillText('КОММЕНТАРИЙ МАСТЕРА',MX,y);y+=24;txt(M.cc[cat.id],MX,CW,'400 21px '+SA,K1,30)}});
- if(M.rec){need(120);y+=26;x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=22;txt('Рекомендации мастера',MX,CW,'500 32px '+SE,AC,44);y+=6;txt(M.rec,MX,CW,'400 21px '+SA,K1,30)}
+ if(M.rec){need(120);y+=26;x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=22;txt('Рекомендации мастера',MX,CW,'600 32px '+SE,AC,44);y+=6;txt(M.rec,MX,CW,'400 21px '+SA,K1,30)}
  const LK=cv.map(()=>[]),
  it=[[MASTER.n,''],[fph(MASTER.p),'tel:'+MASTER.p],['@'+MASTER.i,'https://instagram.com/'+MASTER.i]];
  cv.forEach((g,pi)=>{const t=g.getContext('2d');t.textBaseline='top';
@@ -516,7 +591,7 @@ async function mk(){let u,k;
  if(!$('#pp'))return;
  PB=pdf(u,k);
  $('#pp').innerHTML=u.map(s=>`<img src="${s}" alt="Страница памятки">`).join('');
- $('#pm').textContent='Готово. Проверьте памятку и сохраните PDF.';
+ $('#pm').remove();
  $('#bs').disabled=false;$('#bd').disabled=false}
 function fdl(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},5000)}
 function dl(){fdl(PB,fn())}
@@ -529,7 +604,7 @@ function dsave(){try{localStorage.setItem(GK,JSON.stringify(DS))}catch(e){}}
 function tokOk(){return !!(GT&&GT.exp>Date.now()+60000)}
 function fdt(t){return new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function dsUi(){const e=$('#ds');if(!e)return;e.textContent=!DS.on?'':DS.conflict?'☁ версии расходятся':DS.dirty?'☁ не сохранено':'☁ сохранено';e.style.fontWeight=DS.on&&(DS.dirty||DS.conflict)?'600':''}
-function dsMark(){if(!DS.on)return;DS.v=(DS.v||0)+1;DS.dirty=1;dsave();dsUi();if(!DS.conflict){clearTimeout(gtm);gtm=setTimeout(auto,2500)}}
+function dsMark(){if(!DS.on)return;DS.v=(DS.v||0)+1;if(!DS.dirty||!DS.dsince)DS.dsince=Date.now();DS.dirty=1;dsave();dsUi();if(!DS.conflict){clearTimeout(gtm);gtm=setTimeout(auto,2500)}}
 function rfs(){if(CV=='set'||CV=='home')go(CV)}
 
 function gload(){return new Promise((res,rej)=>{if(window.google&&google.accounts&&google.accounts.oauth2)return res();
@@ -605,9 +680,9 @@ function dDisc(){dlg('Отключить Google Диск?','Копия на Ди
 
 function drCard(h){if(!GCID||!DS.on)return '';
 if(DS.conflict)return `<div class="card bk"><b>На Диске другая версия базы</b><p class="mut" style="margin:6px 0 14px">Версия на Диске и версия на этом устройстве расходятся. Выберите, какую оставить.</p><button class="btn" onclick="dCheck()">Разобраться</button></div>`;
-if(DS.dirty)return `<div class="card bk"><b>Изменения ещё не сохранены на Диск</b><p class="mut" style="margin:6px 0 14px">Автосохранение работает, пока вход в Google свежий (около часа). Нажмите кнопку, чтобы сохранить сейчас.</p><button class="btn" onclick="dPush()">Сохранить на Диск</button></div>`;
-if(h&&!tokOk()&&!gck)return `<p style="margin:0 0 18px"><a class="ln" tabindex="0" role="button" onclick="dCheck()" onkeydown="if(event.key=='Enter')dCheck()">☁ Проверить, нет ли на Диске более свежей версии</a></p>`;
+if(DS.dirty&&DS.dsince&&Date.now()-DS.dsince>3*864e5&&Date.now()>(DS.snz||0))return `<div class="card bk"><b>Изменения ещё не сохранены на Диск</b><p class="mut" style="margin:6px 0 14px">Автосохранение работает, пока вход в Google свежий (около часа). Нажмите кнопку, чтобы сохранить сейчас.</p><button class="btn" onclick="dPush()">Сохранить на Диск</button> <button class="btn l" onclick="dLater()">Позже</button></div>`;
 return ''}
+function dLater(){DS.snz=Date.now()+3*864e5;dsave();rfs()}
 function dCard(){const st='class="card" style="max-width:560px;margin-top:18px"';
 if(!GCID)return `<div ${st}><h2>Google Диск</h2><p class="mut" style="margin:8px 0 0">Подключение к Диску ещё не настроено.</p></div>`;
 if(!DS.on)return `<div ${st}><div class="eyebrow">Рекомендуется</div><h2 style="margin:4px 0 10px">Автосохранение в Google Диск</h2><p class="mut">Подключите один раз, и клиенты, визиты и памятки будут сами сохраняться в вашем Google Диске. Если сменится телефон или очистится браузер, всё вернётся одной кнопкой. Файл лежит в скрытой папке: его не видно и случайно не удалить. Другие файлы на Диске приложение не видит.</p><button class="btn" onclick="dConn()">Подключить Google Диск</button></div>`;
