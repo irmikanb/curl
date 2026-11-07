@@ -207,10 +207,20 @@ label{font-size:14px;font-weight:600}
 .cht>span{flex:1;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:600}
 .cb{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .cb svg{width:40px;height:40px}
+/* ===== Карточка средства: значки в верхнем правом углу, фото открывается крупно ===== */
+.pr{align-items:flex-start}
+.pt{font:inherit;cursor:zoom-in;margin:0}
+.ph2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ph2 .eyebrow{min-width:0}
+.ph2 .pq{flex:none;margin-right:-4px}
+.pi img{cursor:zoom-in}
+#zd{width:min(640px,96vw);padding:16px;text-align:center}
+#zd img{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;background:#fff;border-radius:12px}
+#zd h3{font-family:inherit;font-size:16px;font-weight:600;margin:12px 0 14px}
 </style></head><body>
 <nav><b class="lg" tabindex="0" role="link" onclick="go('home')" onkeydown="if(event.key=='Enter')go('home')">Кудри Дз.</b>
 <a data-v="clients" onclick="go('clients')">Клиенты</a><a data-v="prods" onclick="go('prods')">База средств</a><a data-v="cats" onclick="goCats()">Категории</a><a data-v="set" onclick="go('set')">Сохранение базы</a><a id="ds" class="sm" onclick="go('set')" style="margin-left:auto"></a></nav>
-<main></main><footer style="text-align:center;color:var(--mut);font-size:12px;padding:0 16px 28px">© 2026 Irmika · Программа «Кудри Дз.» · Все права защищены</footer><dialog id="dg"></dialog><div id="ts"></div>
+<main></main><footer style="text-align:center;color:var(--mut);font-size:12px;padding:0 16px 28px">© 2026 Irmika · Программа «Кудри Дз.» · Все права защищены</footer><dialog id="dg"></dialog><dialog id="zd" onclick="if(event.target===this)this.close()"></dialog><div id="ts"></div>
 <script>
 /* © 2026 Irmika. Все права защищены. Использование без письменного разрешения автора запрещено. */
 const $=s=>document.querySelector(s),
@@ -441,7 +451,7 @@ function vMemo(){return `<div class="card"><div class="eyebrow">Персонал
 <div class="mchips" id="mch">${mchipsH()}</div>`+
 memoCats().map((c,i)=>{const ps=D.prods.filter(p=>p.cat==c.id&&(!p.arch||M.sel[p.id]));
 return `<div class="card mcard" id="mc-${c.id}"><h2 class="ct"><i>0${i+1}</i>${E(cap(c.name))}</h2>${c.why?`<p class="cd2">${E(c.why)}</p>`:''}`+
-(ps.length?`<div class="g2">${ps.map(p=>`<label class="pi mp"><input type="checkbox" ${M.sel[p.id]?'checked':''} onchange="M.sel['${p.id}']=this.checked;mchips()">${img(p)}<span><b>${E(p.name)}</b>${p.arch?`<br><span class="mut">Удалено из базы, осталось в этой памятке</span>`:''}</span></label>`).join('')}</div>`:'<p class="mut">В этой категории пока нет средств. Добавьте их в «Базе средств».</p>')+
+(ps.length?`<div class="g2">${ps.map(p=>`<label class="pi mp"><input type="checkbox" ${M.sel[p.id]?'checked':''} onchange="M.sel['${p.id}']=this.checked;mchips()">${p.img?`<img src="${p.img}" alt="" onclick="event.preventDefault();zi('${p.id}')">`:'<span class="ph"></span>'}<span><b>${E(p.name)}</b>${p.arch?`<br><span class="mut">Удалено из базы, осталось в этой памятке</span>`:''}</span></label>`).join('')}</div>`:'<p class="mut">В этой категории пока нет средств. Добавьте их в «Базе средств».</p>')+
 `<label>Комментарий мастера к разделу</label><textarea placeholder="Например: чередовать с маской" oninput="M.cc['${c.id}']=this.value">${E(M.cc[c.id])}</textarea></div>`}).join('')+
 `<div class="card"><h2>Рекомендации мастера</h2><textarea style="min-height:140px;margin-top:12px" oninput="M.rec=this.value" placeholder="— Спать на шёлковой наволочке&#10;— Не расчёсывать сухие волосы">${E(M.rec)}</textarea></div>
 <button class="btn" style="width:100%" onclick="sv();go('pdf')">Сформировать памятку</button>
@@ -450,9 +460,11 @@ return `<div class="card mcard" id="mc-${c.id}"><h2 class="ct"><i>0${i+1}</i>${E
 /* База средств */
 function vProds(){return `<div class="top"><div><div class="eyebrow">Ваши продукты</div><h1>База средств</h1></div><button class="btn" onclick="edP()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить средство</button></div>
 <div class="row" style="margin:18px 0 22px"><div class="se" style="flex:3"><input id="q" placeholder="Поиск по названию" oninput="lp()"><button type="button" class="xc" aria-label="Очистить поиск" onclick="$('#q').value='';lp();$('#q').focus()">×</button></div><select id="fc" onchange="lp()"><option value="">Все категории</option>${sorted().map(c=>`<option value="${c.id}">${E(c.name)}</option>`).join('')}</select></div><div class="pgl" id="pl"></div>`}
+function zi(id){const p=D.prods.find(x=>x.id==id);if(!p||!p.img)return toast('У этого средства нет фото');
+$('#zd').innerHTML=`<img src="${p.img}" alt=""><h3>${E(p.name)}</h3><button class="btn l" onclick="$('#zd').close()">Закрыть</button>`;$('#zd').showModal()}
 function lp(){const q=$('#q').value.toLowerCase(),f=$('#fc').value,
 r=D.prods.filter(p=>!p.arch&&(!f||p.cat==f)&&p.name.toLowerCase().includes(q));
-$('#pl').innerHTML=r.map(p=>`<div class="pr"><div class="pt">${p.img?`<img src="${p.img}" alt="">`:''}</div><div class="px"><div class="eyebrow">${E(cn(p.cat))}</div><h3>${E(p.name)}</h3></div><div class="pq"><button class="ib" aria-label="Изменить" title="Изменить" onclick="edP('${p.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="dP('${p.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>`).join('')||`<p class="mut">${D.prods.some(p=>!p.arch)?'Ничего не найдено.':'База пуста. Нажмите «Добавить средство» и загрузите первое фото.'}</p>`}
+$('#pl').innerHTML=r.map(p=>`<div class="pr"><button type="button" class="pt" aria-label="Открыть фото крупнее" onclick="zi('${p.id}')">${p.img?`<img src="${p.img}" alt="">`:''}</button><div class="px"><div class="ph2"><div class="eyebrow">${E(cn(p.cat))}</div><div class="pq"><button class="ib" aria-label="Изменить" title="Изменить" onclick="edP('${p.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="dP('${p.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div><h3>${E(p.name)}</h3></div></div>`).join('')||`<p class="mut">${D.prods.some(p=>!p.arch)?'Ничего не найдено.':'База пуста. Нажмите «Добавить средство» и загрузите первое фото.'}</p>`}
 function edP(id){ut++;const p=D.prods.find(x=>x.id==id)||{};cur=p.id||null;curImg=p.img||'';
 $('#dg').innerHTML=`<h2>${id?'Изменить':'Добавить'} средство</h2><label>Фото</label><input type="file" accept="image/*" onchange="rz(this.files[0],500,d=>{curImg=d;$('#pv').innerHTML='<img src=&quot;'+d+'&quot; style=&quot;height:90px;margin-top:8px&quot;>'})"><div id="pv">${curImg?`<img src="${curImg}" style="height:90px;margin-top:8px" alt="">`:''}</div>
 <label>Или ссылка на фото в интернете</label><div style="display:flex;gap:8px"><input id="pu" type="url" inputmode="url" placeholder="https://…/photo.jpg" style="min-width:0"><button class="btn l" id="pub" type="button" onclick="ul()" style="flex:none">Загрузить</button></div><p class="mut" style="margin:6px 0 0;font-size:13px">Нужна ссылка именно на картинку: нажмите на фото и удерживайте, затем «Копировать адрес изображения».</p>
