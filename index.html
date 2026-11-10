@@ -737,15 +737,17 @@ async function mk(){let u,k;
 function fdl(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},5000)}
 function dl(){fdl(PB,fn())}
 function shMsg(t){const m=$('#pm');if(m)m.textContent=t;toast(t,12000)}
-async function sh(){const ua=navigator.userAgent||'',dv=/iPhone|iPad|iPod/.test(ua)?'iOS':/Android/.test(ua)?'Android':'компьютер',inapp=/Telegram|Instagram|FBAN|FBAV|FB_IAB|Viber|Line\//i.test(navigator.userAgent||''),
+let shAlt=false;
+async function sh(){const ua=navigator.userAgent||'',dv=/iPhone|iPad|iPod/.test(ua)?'iOS':/Android/.test(ua)?'Android':'компьютер',inapp=/Telegram|Instagram|FBAN|FBAV|FB_IAB|Viber|Line\//i.test(ua),
  mkF=n=>{try{const x=new File([PB],n,{type:'application/pdf'});return navigator.canShare&&navigator.canShare({files:[x]})?x:null}catch(e){return null}};
- let f=mkF(fn())||mkF('pamyatka.pdf');
+ /* После неудачи следующее нажатие пробует короткое имя файла без кириллицы. Вторую попытку нельзя делать сразу в том же вызове: браузер тратит «разрешение от нажатия» на первую. */
+ const f=shAlt?mkF('pamyatka.pdf'):(mkF(fn())||mkF('pamyatka.pdf'));
  if(!f){dl();return shMsg(inapp?'Внутри мессенджера «Поделиться» не работает. PDF скачан. Откройте приложение в обычном браузере (Safari или Chrome) или через значок на экране «Домой».':'Этот браузер не умеет отправлять файл через «Поделиться» ('+dv+'). PDF скачан, прикрепите его в мессенджере вручную.')}
- try{await navigator.share({files:[f]})}catch(e){
+ try{await navigator.share({files:[f]});shAlt=false}catch(e){
   if(e&&e.name=='AbortError')return;
-  const g=mkF('pamyatka.pdf');
-  if(g&&g.name!=f.name){try{await navigator.share({files:[g]});return}catch(e2){if(e2&&e2.name=='AbortError')return}}
-  dl();shMsg('Не удалось открыть «Поделиться» (код: '+((e&&e.name)||'ошибка')+', '+dv+'). PDF скачан, прикрепите его в мессенджере вручную.')}}
+  const first=!shAlt;shAlt=first;
+  if(first)dl();
+  shMsg('Не удалось открыть «Поделиться» (код: '+((e&&e.name)||'ошибка')+((e&&e.message)?': '+e.message:'')+', '+dv+'). '+(first?'PDF скачан. Нажмите «Поделиться» ещё раз: попробуем с коротким именем файла. Или прикрепите скачанный PDF вручную.':'PDF уже скачан, прикрепите его в мессенджере вручную.'))}}
 const nac=()=>document.querySelectorAll('input,textarea').forEach(e=>{if(e.getAttribute('autocomplete')!='off')e.setAttribute('autocomplete','off')});
 new MutationObserver(nac).observe(document.body,{childList:true,subtree:true});
 /* ===== Google Диск: база хранится в скрытой папке приложения на Диске мастера ===== */
