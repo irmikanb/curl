@@ -135,7 +135,7 @@ input[type=checkbox]:checked{background:var(--acc)}
 input[type=checkbox]:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
 #vf>div{background:var(--soft);border-radius:18px;padding:6px 16px 18px;border-top:0!important;margin-top:16px!important}
 #vf .eyebrow{font:500 20px Lora,Georgia,serif;text-transform:none;letter-spacing:0;color:var(--ink)}
-#vf input,#vf textarea{background:var(--card)}
+#vf input:not([type=checkbox]),#vf textarea{background:var(--card)}
 @media(max-width:600px){h1{font-size:30px}nav b{font-size:24px}}
 
 /* Оформление */
@@ -217,16 +217,43 @@ label{font-size:14px;font-weight:600}
 #zd{width:min(640px,96vw);padding:16px;text-align:center}
 #zd img{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;background:#fff;border-radius:12px}
 #zd h3{font-family:inherit;font-size:16px;font-weight:600;margin:12px 0 14px}
+/* ===== Выбор средства в памятке: галочка на углу фото, тексту больше места ===== */
+.pi.mp{position:relative;padding:12px 14px}
+.pi.mp input{position:absolute;order:0;margin:0;left:5px;top:3px;width:26px;height:26px;z-index:1;border:2px solid var(--bd);background:var(--card)}
+.pi.mp input:checked{background:var(--acc);border-color:#fff}
+.pi.mp>span:last-child{flex:1;min-width:0;overflow-wrap:anywhere}
+.tr{display:flex;gap:12px;align-items:flex-start;background:var(--soft);border:2px solid transparent;border-radius:16px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font-size:15px;font-weight:400;line-height:1.4}
+.tr:has(input:checked){border-color:var(--acc);background:#F7E8DC}
+.tr input{margin-top:1px}.tr b{display:block;font-weight:600;margin-bottom:2px}
+.tp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.tp textarea{min-height:70px;margin-top:8px}.tp>textarea:first-child{margin-top:0}
+.tpb{display:flex;justify-content:flex-end;gap:6px;margin-top:6px}
+.tph{display:flex;gap:4px;align-items:center}.tph input{flex:1;min-width:0;font-weight:700;font-size:17px}.tph .tpb{margin:0;flex:none}
+.tp.tn{display:flex;gap:6px;align-items:flex-start}.tp.tn textarea{flex:1;min-width:0;margin:0;min-height:84px}.tp.tn .tpb{flex-direction:column;gap:0;margin:0}
+.tp.lr{display:flex;gap:6px;align-items:center;padding:8px 8px 8px 12px}.tp.lr input{flex:1;min-width:0}.tp.lr .tpb{margin:0}
+/* Шаблоны и списки: без лишних рамок, одна линия на поле */
+.tp{background:none;border:0;border-radius:0;padding:0;margin-bottom:10px}
+.tp.tn{align-items:center}.tp.tn textarea{min-height:44px;overflow:hidden}
+.tp.lr{padding:0}
+.tp:not(.tn):not(.lr){padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+#tsl .tp:last-child{border-bottom:0;margin-bottom:0}
+.tp textarea{overflow:hidden;resize:none}
+.seg{display:flex;gap:8px;margin:14px 0 22px;overflow-x:auto}
+.seg button{flex:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:9px 18px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+#sc>.eyebrow,#sc>h1{display:none}
+.tb{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:600px){.tb{width:100%;flex-wrap:nowrap}.tb .btn{width:auto}.tb .btn.l{flex:none}.tb .btn:not(.l){flex:1;white-space:nowrap}}
 </style></head><body>
 <nav><b class="lg" tabindex="0" role="link" onclick="go('home')" onkeydown="if(event.key=='Enter')go('home')">Кудри Дз.</b>
-<a data-v="clients" onclick="go('clients')">Клиенты</a><a data-v="prods" onclick="go('prods')">База средств</a><a data-v="cats" onclick="goCats()">Категории</a><a data-v="set" onclick="go('set')">Сохранение базы</a><a id="ds" class="sm" onclick="go('set')" style="margin-left:auto"></a></nav>
+<a data-v="clients" onclick="go('clients')">Клиенты</a><a data-v="prods" onclick="go('prods')">Средства</a><a data-v="set" onclick="go('set')">Настройки</a><a id="ds" class="sm" onclick="go('set')" style="margin-left:auto"></a></nav>
 <main></main><footer style="text-align:center;color:var(--mut);font-size:12px;padding:0 16px 28px">© 2026 Irmika · Программа «Кудри Дз.» · Все права защищены</footer><dialog id="dg"></dialog><dialog id="zd" onclick="if(event.target===this)this.close()"></dialog><div id="ts"></div>
 <script>
 /* © 2026 Irmika. Все права защищены. Использование без письменного разрешения автора запрещено. */
 const $=s=>document.querySelector(s),
 E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
 uid=()=>Math.random().toString(36).slice(2,9),K='hcs_v1',
-nm=()=>({name:'',date:new Date().toLocaleDateString('en-CA'),note:'',sel:{},cc:{},rec:''});
+nm=()=>{const t=D.tpl||tplDef(),a=k=>{const o={};t[k].forEach(i=>o[i.id]=true);return o};return{name:'',date:new Date().toLocaleDateString('en-CA'),note:t.hello,sel:{},cc:{},rec:'',nots:a('nots'),steps:a('steps'),bye:t.bye}};
 const seed=()=>({prods:[],set:{},cats:[
  ['ШАМПУНЬ','Очищение кожи головы и волос.','Нанести на влажную кожу головы, вспенить и смыть.','При каждом мытье.'],
  ['КОНДИЦИОНЕР','Смягчение, разглаживание и лёгкое расчёсывание волос.','Нанести на влажные волосы от середины до кончиков, оставить 1–2 минуты, смыть.','После каждого мытья.'],
@@ -240,7 +267,7 @@ let M=nm(),qr='',cur=null,curImg='',DR=[],CC=null,V=null,CV='',SEL=new Set(),VF=
 const GCID='97625365834-ohm2fvlj39cgcirfl1uv2ov4j1dqbsjt.apps.googleusercontent.com',GSC='https://www.googleapis.com/auth/drive.appdata',GFN='kudri-dz-base.json',GK='hcs_drive';
 let DS={},GT=null,GC=null,GP=null,gbusy=false,gtm=null,gck=false,SQ=0,DK=[];try{DS=JSON.parse(localStorage.getItem(GK))||{}}catch(e){DS={}}
 const needsBackup=()=>{const lb=D.meta.lastBackup||D.meta.installedAt;return (D.meta.chg||0)>lb+6e4&&Date.now()-lb>30*864e5&&Date.now()>(D.meta.bsnz||0)};
-const save=()=>{D.meta.chg=Date.now();try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в разделе «Сохранение базы» и удалите лишние фото.')}if(!SQ)dsMark()};
+const save=()=>{D.meta.chg=Date.now();try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в «Настройки» → «Сохранение» и удалите лишние фото.')}if(!SQ)dsMark()};
 function toast(t,ms){const e=$('#ts');e.textContent=t;e.style.display='block';clearTimeout(e.t);e.t=setTimeout(()=>e.style.display='none',ms||3200)}
 const sorted=()=>D.cats.filter(c=>!c.arch).sort((a,b)=>a.o-b.o),
 cn=id=>(D.cats.find(c=>c.id==id)||{}).name||'',
@@ -262,14 +289,85 @@ function linkMV(){let ch=0;D.memos.forEach(m=>{if(m.vid&&D.visits.some(v=>v.id==
  const v=D.visits.find(v=>v.cid==m.cid&&v.date==m.date&&!D.memos.some(x=>x.vid==v.id));if(v){m.vid=v.id;ch=1}});if(ch)save()}
 linkMV();
 
+/* Шаблоны текстов памятки и обновление категорий */
+function tplDef(){return{
+hello:"Ваши кудри — это богатство!\nКак ухаживать за своими кудрями, чтобы любить их и гордиться ими?",
+nots:[
+{id:'n1',t:"Не расчёсывать волосы, когда они сухие."},
+{id:'n2',t:"Не использовать уходовые средства с силиконами и сушащим спиртом."},
+{id:'n3',t:"Не выпрямлять волосы феном или утюжком."},
+{id:'n4',t:"Не делать филировку, полировку, ботокс и кератин."}],
+steps:[
+{id:'s1',h:"Шампунь",t:"Шампунь подбираем по типу кожи головы. Обычно это серия для окрашенных волос или для увлажнения. Ещё в арсенале должен быть шампунь глубокого очищения.\nМоем только КОРНИ. Шампунь на ладони, добавляем воды, растираем и наносим на кожу головы. В идеале использовать массажёр для головы. Остальную массу волос мы не пеним и не растираем. Моем голову минимум 2 раза! Смываем."},
+{id:'s2',h:"Кондиционер",t:"Воды на волосах должно быть много. Отступаем 10 см от кожи головы и наносим кондиционер, бальзам или маску. Волосы прочёсываем. Добавляем воды. Визуально волосы должны напоминать скользкие водоросли."},
+{id:'s3',h:"Маска",t:"Если нам нужно глубокое увлажнение, то мы используем маску. Надеваем шапочку или оборачиваем плёнкой, укутываем в полотенце и прогреваем феном. Минут 20 достаточно."},
+{id:'s4',h:"Смываем и промакиваем",t:"Смываем всё. Волосы не вытираем, а промакиваем. Полотенце «гладкое»: микрофибра, старая майка, сатин. Приступаем к укладке. Волосы должны быть мокрыми."},
+{id:'s5',h:"Увлажнение: leave-in",t:"Волосы очень мокрые. Не забываем! Наносим несмываемое средство, предварительно растерев его на ладонях. Можно использовать расчёску на этом этапе."},
+{id:'s6',h:"Стайлинг: гель, пенка, крем",t:"Волосы мокрые! Гель мы растираем на ладонях, и нужно ещё в ладонь брызнуть пульверизатором с водой. Распределяем по волосам. И от кончиков до корней «жамкающими» движениями помогаем кудряшке сформироваться."},
+{id:'s7',h:"Сушка",t:"Когда мы прошлись по всей голове, нужно дать высохнуть волосам естественным путём либо помочь диффузором (а можно и через дуршлаг)."},
+{id:'s8',h:"Разбиваем каст",t:"Когда волосы высохнут, их вид должен напоминать мокрую химию, а по ощущениям будет чувствоваться корочка. Вот эту корочку (каст) нам нужно разбить. Волосы обязательно должны быть сухими. Пружинными движениями от кончиков до корней мы разбиваем каст. Не расчёсываем ни руками, ни расчёской длину. Можно использовать расчёску-афропик, чтобы сделать это только у корней."}],
+bye:"Скажите себе, что «Я прекрасна», и идите украшать этот мир!\n\nС любовью, Киреева Надежда"}}
+const TPLV=1,CATU={
+'ШАМПУНЬ':['Очищение кожи головы и волос. Подбирается по типу кожи головы.','Моем только корни: наносим на кожу головы, остальную длину не пеним и не растираем. Мыть минимум 2 раза, затем смыть.','При каждом мытье.'],
+'КОНДИЦИОНЕР':['Смягчение, разглаживание и лёгкое расчёсывание волос.','Воды на волосах должно быть много. Отступить 10 см от кожи головы, нанести и прочесать. Волосы должны быть скользкими, как водоросли.','После каждого мытья.'],
+'МАСКА':['Глубокое увлажнение и питание волос.','Нанести на волосы, надеть шапочку или обернуть плёнкой, укутать полотенцем и прогреть феном. Около 20 минут, затем смыть.','Когда нужно глубокое увлажнение, вместо кондиционера.'],
+'НЕСМЫВАЕМЫЙ УХОД':['Дополнительное увлажнение и облегчение расчёсывания.','Нанести на очень мокрые волосы, предварительно растерев на ладонях. На этом этапе можно воспользоваться расчёской.','После мытья, перед стайлингом.']};
+(function(){if(D.meta.tv==TPLV)return;
+D.cats.forEach(c=>{const u=CATU[(c.name||'').trim().toUpperCase()];if(u&&!c.arch){c.why=u[0];c.how=u[1];c.when=u[2]}});
+if(!D.cats.some(c=>(c.name||'').trim().toUpperCase()=='СТАЙЛИНГ')){const th=D.cats.find(c=>(c.name||'').trim().toUpperCase()=='ТЕРМОЗАЩИТА'),o=th?th.o:Math.max(0,...D.cats.map(c=>c.o))+1;if(th)th.o=o+1;
+D.cats.push({id:uid(),name:'СТАЙЛИНГ',o,why:'Помогает кудряшке сформироваться и держать форму (гель, пенка, крем).',how:'Наносить на мокрые волосы: растереть на ладонях, добавить воды из пульверизатора, распределить и «жамкающими» движениями от кончиков до корней помочь локону сформироваться.',when:'После несмываемого ухода, до сушки.'})}
+D.tpl=D.tpl||tplDef();D.meta.tv=TPLV;save()})();
+(function(){let ch=0;D.memos.forEach(m=>{if(!m.snap){m.snap=mkSnap(m);ch=1}});if(ch)save()})();
+
+/* Раздел «Услуги»: списки брендов и вариантов завивки */
+const LS=[['brands','Мои бренды','Названия появляются галочками в поле «Состав» у завивки, ухода и окрашивания. Кнопка «Другое» остаётся всегда.','Название бренда'],['kinds','Виды завивки','Список для поля «Вид завивки».','Например: Био'],['tools','Инструменты для завивки','Список для поля «Инструменты».','Например: Коклюшки']];
+function lrow(k,i,v,ph){return `<div class="tp lr"><input data-l="${k}" value="${E(v)}" placeholder="${ph}"><div class="tpb"><button class="ib" aria-label="Выше" title="Выше" onclick="lup('${k}',${i})">${IC_UP}</button><button class="ib" aria-label="Ниже" title="Ниже" onclick="ldn('${k}',${i})">${IC_DN}</button><button class="ib" aria-label="Удалить" title="Удалить" onclick="ldel('${k}',${i})">${IC_DEL}</button></div></div>`}
+function vSvc(){const plus='<svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>';
+return `<div class="eyebrow">Для записи визитов</div><h1>Услуги</h1><p class="mut" style="max-width:560px">Здесь мастер сам ведёт списки, из которых отмечает галочками при записи визита. Если убрать пункт из списка, в уже записанных визитах он останется.</p>`+
+LS.map(([k,t,h,ph])=>`<div class="card" style="margin-top:18px"><h2>${t}</h2><p class="mut" style="margin:6px 0 12px">${h}</p><div id="l-${k}">${D.lists[k].map((v,i)=>lrow(k,i,v,ph)).join('')}</div><button class="btn l" onclick="ladd('${k}')">${plus}Добавить</button></div>`).join('')+
+`<div class="bar" style="justify-content:flex-end"><button class="btn" onclick="lsv()">Сохранить</button></div>`}
+function lcol(){LS.forEach(([k])=>{D.lists[k]=[...document.querySelectorAll(`#l-${k} input`)].map(i=>i.value)})}
+const lrr=()=>{$('#sc').innerHTML=vSvc()};
+function ladd(k){lcol();D.lists[k].push('');lrr();const a=document.querySelectorAll(`#l-${k} input`);a[a.length-1].focus()}
+function ldel(k,i){ask('Удалить из списка? В уже записанных визитах он останется.',()=>{lcol();D.lists[k].splice(i,1);save();lrr()})}
+function ldn(k,i){lcol();const a=D.lists[k];if(i<a.length-1){const x=a[i];a[i]=a[i+1];a[i+1]=x}lrr()}
+function lup(k,i){lcol();const a=D.lists[k];if(i>0){const x=a[i];a[i]=a[i-1];a[i-1]=x}lrr()}
+function lsv(){lcol();LS.forEach(([k])=>{D.lists[k]=D.lists[k].map(v=>v.trim()).filter(Boolean).filter((v,i,a)=>a.indexOf(v)==i&&v!='Другое')});save();lrr();toast('Списки сохранены')}
+
+/* Шаблоны: редактирование */
+const IC_DEL='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>',
+IC_DN='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+IC_UP='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>';
+function tbtn(k,id){const dl=`<button class="ib" aria-label="Удалить" title="Удалить" onclick="tdel('${k}','${id}')">${IC_DEL}</button>`;return `<div class="tpb">${k=='nots'?'':`<button class="ib" aria-label="Выше" title="Выше" onclick="tup('${k}','${id}')">${IC_UP}</button><button class="ib" aria-label="Ниже" title="Ниже" onclick="tdn('${k}','${id}')">${IC_DN}</button>`}${dl}</div>`}
+function vTpl(){setTimeout(agr,0);const t=D.tpl,plus='<svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>';
+return `<div class="eyebrow">Тексты памятки</div><h1>Шаблоны</h1><p class="mut" style="max-width:560px">Здесь хранятся тексты, которые подставляются в каждую новую памятку. В самой памятке достаточно поставить или снять галочки. Уже сделанные памятки при изменении шаблонов не переписываются, но при повторном открытии PDF берутся актуальные тексты пунктов и шагов.</p>
+<div class="card" style="margin-top:18px"><h2>Приветствие</h2><textarea id="th" style="min-height:110px;margin-top:12px">${E(t.hello)}</textarea></div>
+<div class="card"><h2>Начнём с «НЕ»</h2><div id="tn" style="margin-top:12px">${t.nots.map(n=>`<div class="tp tn" data-id="${n.id}"><textarea rows="1" oninput="ag(this)" placeholder="Например: Не расчёсывать сухие волосы">${E(n.t)}</textarea>${tbtn('nots',n.id)}</div>`).join('')}</div><button class="btn l" onclick="tadd('nots')">${plus}Добавить пункт</button></div>
+<div class="card"><h2>Порядок ухода по шагам</h2><div id="tsl" style="margin-top:12px">${t.steps.map(n=>`<div class="tp" data-id="${n.id}"><div class="tph"><input placeholder="Название шага" value="${E(n.h)}">${tbtn('steps',n.id)}</div><textarea rows="2" oninput="ag(this)" style="min-height:70px" placeholder="Описание шага">${E(n.t)}</textarea></div>`).join('')}</div><button class="btn l" onclick="tadd('steps')">${plus}Добавить шаг</button></div>
+<div class="card"><h2>Финальные слова и подпись</h2><textarea id="tb" style="min-height:110px;margin-top:12px">${E(t.bye)}</textarea></div>
+<div class="bar" style="justify-content:flex-end"><button class="btn" onclick="tsv()">Сохранить</button></div>`}
+function ag(e){e.style.height='auto';e.style.height=(e.scrollHeight+2)+'px'}
+function agr(){document.querySelectorAll('.tp textarea').forEach(ag)}
+function tcol(){const t=D.tpl;t.hello=$('#th').value;t.bye=$('#tb').value;
+t.nots=[...document.querySelectorAll('#tn .tp')].map(e=>({id:e.dataset.id,t:e.querySelector('textarea').value}));
+t.steps=[...document.querySelectorAll('#tsl .tp')].map(e=>({id:e.dataset.id,h:e.querySelector('input').value,t:e.querySelector('textarea').value}))}
+const trr=()=>{$('#sc').innerHTML=vTpl()};
+function tadd(k){tcol();D.tpl[k].push(k=='nots'?{id:uid(),t:''}:{id:uid(),h:'',t:''});trr()}
+function tdel(k,id){ask('Удалить этот пункт из шаблона?',()=>{tcol();D.tpl[k]=D.tpl[k].filter(x=>x.id!=id);save();trr()})}
+function tdn(k,id){tcol();const a=D.tpl[k],i=a.findIndex(x=>x.id==id);if(i>=0&&i<a.length-1){const x=a[i];a[i]=a[i+1];a[i+1]=x}trr()}
+function tup(k,id){tcol();const a=D.tpl[k],i=a.findIndex(x=>x.id==id);if(i>0){const x=a[i];a[i]=a[i-1];a[i-1]=x}trr()}
+function tsv(){tcol();const t=D.tpl;t.nots=t.nots.filter(n=>n.t.trim());t.steps=t.steps.filter(n=>n.t.trim()||n.h.trim());save();trr();toast('Шаблоны сохранены')}
+
 function go(v){
+ if(!D.tpl)D.tpl=tplDef();if(!D.lists)D.lists=listsDef();
  if(v=='client'&&!D.clients.some(c=>c.id==CC))v='clients';
 if(v=='rem'&&!D.clients.some(c=>SEL.has(c.id)))v='mail';
   CV=v;if(v=='cats')DR=DR||[];
- $('main').innerHTML={home:vHome,memo:vMemo,prods:vProds,cats:vCats,set:vSet,pdf:vPdf,clients:vClients,client:vClient,rem:vRem,mail:vMail}[v]();
+ const HB={set:'Сохранение',tpl:'Шаблоны',svc:'Услуги'},VW={home:vHome,memo:vMemo,prods:vProds,cats:vCats,set:vSet,pdf:vPdf,clients:vClients,client:vClient,rem:vRem,mail:vMail,tpl:vTpl,svc:vSvc};
+ $('main').innerHTML=HB[v]?`<h1>Настройки</h1><div class="seg">${Object.keys(HB).map(k=>`<button class="${k==v?'on':''}" onclick="go('${k}')">${HB[k]}</button>`).join('')}</div><div id="sc">${VW[v]()}</div>`:VW[v]();
  if(v=='prods')lp();if(v=='clients')lc();if(v=='mail')lm();
- document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v==(v=='pdf'||v=='memo'||v=='client'||v=='rem'||v=='mail'?'clients':v)));
- scrollTo(0,0)}
+ document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.v==(HB[v]?'set':v=='cats'?'prods':(v=='pdf'||v=='memo'||v=='client'||v=='rem'||v=='mail'?'clients':v))));
+ dsUi();scrollTo(0,0)}
 function goCats(){DR=[];go('cats')}
 
 /* Главная и база памяток */
@@ -278,7 +376,7 @@ function bkBanner(){return `<div class="card bk bn"><b>Пора сохранит
 function bkLater(){D.meta.bsnz=Date.now()+7*864e5;try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}go('home')}
 function vHome(){const rv=[...D.visits].filter(v=>D.clients.some(c=>c.id==v.cid)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
 return `${drCard(1)}${needsBackup()?bkBanner():''}<h1 style="font-size:24px;line-height:1.25">Приветствую, Надежда</h1>
-<div class="hm"><button class="hc dk" onclick="go('clients')"><b>КЛИЕНТЫ</b><span>Карточки клиентов, журнал визитов и памятки</span></button><button class="hc" onclick="go('prods')"><b>БАЗА СРЕДСТВ</b><span>Добавить и отредактировать продукты</span></button></div>
+<div class="hm"><button class="hc dk" onclick="go('clients')"><b>КЛИЕНТЫ</b><span>Карточки клиентов, журнал визитов и памятки</span></button><button class="hc" onclick="go('prods')"><b>СРЕДСТВА</b><span>Добавить и отредактировать продукты</span></button></div>
 <div class="top" style="margin-top:40px;margin-bottom:16px"><h2>Последние визиты</h2><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">Все клиенты →</a></div>
 <div class="plist">${rv.map(v=>{const c=D.clients.find(x=>x.id==v.cid);return `<button class="pl" onclick="oc('${c.id}')"><span><b>${E(c.name)}</b><br><span class="mut sm">${fd(v.date)} · ${E(v.svcs.join(', '))}${D.memos.some(m=>m.vid==v.id)?' · есть памятка':''}</span></span><span class="chev" aria-hidden="true">›</span></button>`}).join('')||`<p class="mut" style="margin:0">Пока нет визитов. Откройте клиента в разделе «Клиенты» и добавьте первый визит.</p>`}</div>`}
 function vClients(){return `${drCard()}${needsBackup()?bkBanner():''}<div class="top"><h1>Клиенты</h1><div class="ac"><button class="btn" onclick="edC()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить клиента</button><a class="ln" tabindex="0" role="button" style="color:var(--mut)" onclick="gm()" onkeydown="if(event.key=='Enter')gm()">Сделать рассылку</a></div></div>
@@ -355,33 +453,42 @@ function ask(t,fn){askFn=fn;$('#dg').innerHTML=`<h2>Подтвердите уд�
 function askNo(){askFn=null;$('#dg').close()}
 function askOk(){const f=askFn;askFn=null;$('#dg').close();if(f)f()}
 function oc(id){CC=id;go('client')}
-function sv(){lk(M);if(!M.id)M.id=uid();M.upd=Date.now();const i=D.memos.findIndex(m=>m.id==M.id),o=JSON.parse(JSON.stringify(M));i<0?D.memos.unshift(o):D.memos[i]=o;gc();save()}
+const mlist=k=>[...D.tpl[k],...((M.snap&&M.snap[k])||[]).filter(n=>M.nots&&!D.tpl[k].some(x=>x.id==n.id)&&(k=='nots'?M.nots:M.steps||{})[n.id]).map(n=>({...n,gone:1}))];
+function mkSnap(m,o){o=o||{};const T=D.tpl||tplDef(),
+mk=(live,sel,prev,ok)=>{sel=sel||{};const r=live.filter(n=>sel[n.id]&&ok(n)).map(n=>({...n})),ids=r.map(n=>n.id);(prev||[]).forEach(n=>{if(sel[n.id]&&!ids.includes(n.id)&&!live.some(x=>x.id==n.id))r.push(n)});return r},
+ps=D.prods.filter(p=>m.sel&&m.sel[p.id]).map(p=>({id:p.id,cat:p.cat,name:p.name,where:p.where,art:p.art,com:p.com})),
+used=new Set(ps.map(p=>p.cat)),cs=D.cats.filter(c=>used.has(c.id)).map(c=>({id:c.id,name:c.name,o:c.o,why:c.why,when:c.when}));
+(o.cats||[]).forEach(c=>{if(used.has(c.id)&&!cs.some(x=>x.id==c.id))cs.push(c)});
+return{nots:mk(T.nots,m.nots,o.nots,n=>n.t.trim()),steps:mk(T.steps,m.steps,o.steps,n=>n.t.trim()||n.h.trim()),prods:ps,cats:cs}}
+function sv(){lk(M);if(!M.id)M.id=uid();M.upd=Date.now();M.snap=mkSnap(M,M.snap);const i=D.memos.findIndex(m=>m.id==M.id),o=JSON.parse(JSON.stringify(M));i<0?D.memos.unshift(o):D.memos[i]=o;gc();save()}
 function om(id,v){M=JSON.parse(JSON.stringify(D.memos.find(m=>m.id==id)));go(v)}
 function xm(id,back){ask('Удалить памятку?',()=>{D.memos=D.memos.filter(m=>m.id!=id);gc();save();go(back||'home')})}
 
 /* Карточка клиента и журнал визитов */
-const SV=['Завивка','Уход','Окрашивание','Стрижка'],
-/* БРЕНДЫ: список для галочек в поле «Состав». Замените названия на настоящие, порядок сохранится */
-BR=['Бренд 1','Бренд 2','Бренд 3'],
+const SV=['Завивка','Уход','Окрашивание','Стрижка','Консультация'],
+/* Бренды и варианты для завивки хранятся в D.lists и меняются в разделе «Услуги» */
 /* Поля услуг: t = текст, c = галочки из списка, b = галочки брендов + «Другое» с полем для ввода */
-FD={'Завивка':[['kind','Вид завивки','c',['Био','Классическое','Корейское (холодное)']],['comp','Состав','b'],['tools','Инструменты','c',['Коклюшки','Бумеранги']],['size','Размер','t'],['time','Время выдержки','t']],
+FD={'Завивка':[['kind','Вид завивки','c','kinds'],['comp','Состав','b'],['tools','Инструменты','c','tools'],['size','Размер','t'],['time','Время выдержки','t']],
 'Уход':[['what','Что сделано','t'],['comp','Состав','b']],
 'Окрашивание':[['comp','Состав','b']],
-'Стрижка':[['what','Что сделано (форма, длина)','t']]},
+'Стрижка':[['what','Что сделано (форма, длина)','t']],
+'Консультация':[['what','Что обсудили','t']]},
 RT=[['','—'],['5','5 — отлично'],['4','4 — хорошо'],['3','3 — средне'],['2','2 — плохо'],['1','1 — очень плохо']],
 opt=(a,v)=>a.map(([k,l])=>`<option value="${k}" ${k==v?'selected':''}>${l}</option>`).join(''),
 uq=k=>[...new Set(D.visits.flatMap(v=>Object.values(v.f||{}).map(o=>o[k])).filter(Boolean))];
+function memoCard(m){return `<div class="card"><div class="top" style="align-items:flex-start;flex-wrap:nowrap"><div style="min-width:0"><b>${fd(m.date)}</b><div class="acc" style="font-weight:700;margin-top:2px">Памятка без визита</div></div><div class="mb"><button class="ib" aria-label="Изменить" title="Изменить" onclick="om('${m.id}','memo')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="xm('${m.id}','client')">${IC_DEL}</button></div></div><button class="pl bk" style="margin-top:14px;padding:12px 14px;border-radius:8px" onclick="om('${m.id}','pdf')"><span><b>Памятка</b> <span class="sm" style="color:var(--mut)">${fd(m.date)}</span></span><span class="chev" aria-hidden="true">›</span></button></div>`}
 function vClient(){const c=D.clients.find(x=>x.id==CC),
 vs=D.visits.filter(x=>x.cid==c.id).sort((a,b)=>b.date.localeCompare(a.date)),
-os=D.memos.filter(m=>m.cid==c.id&&!D.visits.some(v=>v.id==m.vid)).sort((a,b)=>b.upd-a.upd);
+os=D.memos.filter(m=>m.cid==c.id&&!D.visits.some(v=>v.id==m.vid)),
+jr=[...vs.map(v=>({d:v.date,u:0,h:visitCard(v)})),...os.map(m=>({d:m.date||'',u:m.upd||0,h:memoCard(m)}))].sort((a,b)=>b.d.localeCompare(a.d)||b.u-a.u);
 return `<p><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">← Все клиенты</a></p>
 <div class="card bk"><div class="top"><div><div class="eyebrow" style="color:var(--mut)">Карточка клиента</div><h1>${E(c.name)}${c.vip?VB:''}</h1></div><div class="ed"><button class="ib" aria-label="Изменить" title="Изменить" onclick="edC('${c.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button><button class="ib" aria-label="Удалить" title="Удалить" onclick="xK('${c.id}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
 ${cts(c)}
 ${c.note?`<p style="margin:12px 0 0;white-space:pre-wrap">${E(c.note)}</p>`:''}${c.rem?`<p class="mut sm" style="margin:8px 0 0">Напоминание о записи отправлено: ${fd(c.rem)}</p>`:''}
 </div>
-<div class="top" style="margin:28px 0 14px"><h2>Журнал визитов</h2><button class="btn" onclick="edV()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Новый визит</button></div>
-${vs.map(visitCard).join('')||'<div class="card"><p class="mut" style="margin:0">Визитов пока нет. Нажмите «Новый визит», чтобы записать первый.</p></div>'}
-${os.length?`<h2 style="margin:28px 0 14px">Другие памятки</h2><div class="card" style="padding:0">${os.map(m=>memoRow(m,'client')).join('')}</div>`:''}`}
+<div class="top" style="margin:28px 0 14px"><h2>Журнал визитов и памяток</h2><button class="btn" onclick="edV()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Новый визит</button></div>
+${jr.map(x=>x.h).join('')||'<div class="card"><p class="mut" style="margin:0">Пока пусто. Нажмите «Новый визит», чтобы записать первый.</p></div>'}
+`}
 function fshow(s,k){const a=s[k];if(Array.isArray(a))return a.map(n=>n=='Другое'&&s[k+'_o']?s[k+'_o']:n).join(', ');return a||''}
 function visitCard(v){const ss=SV.filter(x=>v.svcs.includes(x)),
 fs=ss.map(x=>`<div class="vs"><b>${x}</b>${FD[x].map(([k,l])=>{const z=fshow(v.f[x]||{},k);return z?`<div><span class="mut">${l}:</span> ${E(z)}</div>`:''}).join('')}</div>`).join(''),
@@ -414,13 +521,18 @@ D.visits=D.visits.filter(v=>v.cid!=id);D.memos=D.memos.filter(m=>m.cid!=id);D.cl
 function edV(id){const o=D.visits.find(x=>x.id==id);
 V=o?JSON.parse(JSON.stringify(o)):{id:null,cid:CC,date:new Date().toLocaleDateString('en-CA'),svcs:[],f:{},rm:'',rc:'',com:''};V.f=V.f||{};V.svcs=V.svcs||[];
 $('#dg').innerHTML=`<h2>${id?'Изменить':'Новый'} визит</h2><label>Дата</label><input type="date" value="${V.date}" oninput="V.date=this.value">
-<label>Услуги (можно отметить несколько)</label><div style="display:grid;gap:8px">${SV.map(x=>`<label class="pi"><input type="checkbox" ${V.svcs.includes(x)?'checked':''} onchange="tg('${x}',this.checked)"><b>${x}</b></label>`).join('')}</div><div id="vf"></div>
+<label>Услуги (можно отметить несколько)</label><div id="svl" style="display:grid;gap:8px">${SV.map(x=>`<label class="pi"><input type="checkbox" ${V.svcs.includes(x)?'checked':''} onchange="tg('${x}',this.checked)"><b>${x}</b></label>`).join('')}</div>${id?'':`<label class="pi" style="margin-top:8px"><input type="checkbox" id="nv" onchange="tn(this.checked)"><span><b>Памятка без визита</b><span class="mut sm" style="display:block">Визит в журнал не запишется, сразу откроется форма памятки.</span></span></label>`}<div id="vf"></div>
 <label>Оценка мастера</label>${rbar('rm')}<label>Оценка клиента</label>${rbar('rc')}<p class="mut sm" style="margin:8px 0 0">1 — очень плохо, 5 — отлично. Нажмите на выбранную оценку ещё раз, чтобы убрать её.</p>
 <label>Комментарий (что учесть в следующий раз)</label><textarea oninput="V.com=this.value">${E(V.com)}</textarea>
 
-<div class="bar"><button class="btn l" onclick="$('#dg').close()">Отмена</button><button class="btn" onclick="sV()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Сохранить</button></div>`;vf();$('#dg').showModal()}
-function tg(x,on){V.svcs=on?[...V.svcs,x]:V.svcs.filter(y=>y!=x);vf()}
-function fopt(x,k){const f=FD[x].find(a=>a[0]==k);return f[2]=='b'?[...BR,'Другое']:f[3]}
+<div class="bar"><button class="btn l" onclick="$('#dg').close()">Отмена</button><button class="btn" id="sb" onclick="sV()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Сохранить</button></div>`;vf();$('#dg').showModal()}
+function tg(x,on){if(on){V.nov=false;const e=$('#nv');if(e)e.checked=false;tnb(false)}V.svcs=on?[...V.svcs,x]:V.svcs.filter(y=>y!=x);vf()}
+function tnb(on){const b=$('#sb');if(b&&b.lastChild)b.lastChild.textContent=on?'К памятке':'Сохранить'}
+function tn(on){V.nov=on;if(on){V.svcs=[];document.querySelectorAll('#svl input').forEach(i=>i.checked=false);vf()}tnb(on)}
+function listsDef(){return{brands:['Бренд 1','Бренд 2','Бренд 3'],kinds:['Био','Классическое','Корейское (холодное)'],tools:['Коклюшки','Бумеранги']}}
+function fopt(x,k){const f=FD[x].find(a=>a[0]==k),b=f[2]=='b'?D.lists.brands:D.lists[f[3]]||[];V.ox=V.ox||{};const key=x+'|'+k;
+if(!(key in V.ox)){const c=(V.f[x]||{})[k];V.ox[key]=(Array.isArray(c)?c:[]).filter(n=>n!='Другое'&&!b.includes(n))}
+return f[2]=='b'?[...b,...V.ox[key],'Другое']:[...b,...V.ox[key]]}
 function fs(x,k,val){(V.f[x]=V.f[x]||{})[k]=val}
 function fc(x,k,i,on){const o=(V.f[x]=V.f[x]||{}),n=fopt(x,k)[i];let a=Array.isArray(o[k])?o[k]:[];a=on?[...a.filter(y=>y!=n),n]:a.filter(y=>y!=n);o[k]=a;if(n=='Другое')vf()}
 function fld(x,f){const [k,l,ty]=f,o=V.f[x]||{};
@@ -430,7 +542,8 @@ return `<label>${l}</label><div style="display:grid;gap:8px">${ls.map((n,i)=>`<l
 function vf(){$('#vf').innerHTML=SV.filter(x=>V.svcs.includes(x)).map(x=>`<div style="margin-top:18px;border-top:1px solid var(--line)"><div class="eyebrow" style="margin-top:12px">${x}</div>${FD[x].map(f=>fld(x,f)).join('')}</div>`).join('')}
 function rbar(k){return `<div class="rt" id="rt-${k}">${[1,2,3,4,5].map(n=>`<button type="button" class="rb${V[k]==n?' on':''}" aria-label="Оценка ${n}" aria-pressed="${V[k]==n}" onclick="rate('${k}',${n})">${n}</button>`).join('')}</div>`}
 function rate(k,n){V[k]=V[k]==n?'':String(n);document.querySelectorAll('#rt-'+k+' .rb').forEach((b,i)=>{const on=V[k]==i+1;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
-function sV(){if(!V.date)return toast('Укажите дату');if(!V.svcs.length)return toast('Отметьте хотя бы одну услугу');
+function sV(){if(V.nov){const c=D.clients.find(x=>x.id==V.cid);if(!c)return;$('#dg').close();M=nm();M.name=c.name;M.cid=c.id;if(V.date)M.date=V.date;return go('memo')}
+if(!V.date)return toast('Укажите дату');if(!V.svcs.length)return toast('Отметьте услугу или «Памятка без визита»');
 const svcs=SV.filter(x=>V.svcs.includes(x)),f={};
 svcs.forEach(x=>{const o={},s=V.f[x]||{};FD[x].forEach(([k,l,ty])=>{if(ty=='t'){if(s[k])o[k]=s[k];return}
 const a=fopt(x,k).filter(n=>(Array.isArray(s[k])?s[k]:[]).includes(n));if(a.length){o[k]=a;if(a.includes('Другое')&&s[k+'_o'])o[k+'_o']=s[k+'_o']}});if(Object.keys(o).length)f[x]=o});
@@ -443,22 +556,25 @@ function cap(n){n=String(n||'');return n===n.toUpperCase()?n.charAt(0)+n.slice(1
 function mchipsH(){return memoCats().map(c=>{const n=D.prods.filter(p=>p.cat==c.id&&M.sel[p.id]).length;return `<a class="mchip${n?' on':''}" tabindex="0" role="button" onclick="mgo('${c.id}')" onkeydown="if(event.key=='Enter')mgo('${c.id}')">${E(cap(c.name))}${n?' · '+n:''}</a>`}).join('')}
 function mchips(){const e=$('#mch');if(e)e.innerHTML=mchipsH()}
 function mgo(id){const e=$('#mc-'+id);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}
-function mrs(){ask('Выбранные средства и тексты в этой памятке будут очищены.',()=>{M.sel={};M.cc={};M.rec='';M.note='';go('memo')});const d=$('#dg');d.querySelector('h2').textContent='Начать заново?';d.querySelector('.bar .btn:last-child').textContent='Очистить'}
+function mrs(){ask('Выбранные средства и тексты в этой памятке будут очищены.',()=>{const n0=nm();M.sel={};M.cc={};M.rec='';M.note=n0.note;M.nots=n0.nots;M.steps=n0.steps;M.bye=n0.bye;go('memo')});const d=$('#dg');d.querySelector('h2').textContent='Начать заново?';d.querySelector('.bar .btn:last-child').textContent='Очистить'}
 function vMemo(){return `<div class="card"><div class="eyebrow">Персональный уход за волосами</div><h1>${M.id?'Редактирование памятки':'Новая памятка'}</h1>
 <div class="row"><div><label>Клиент</label><input value="${E(M.name)}" ${D.clients.some(c=>c.id==M.cid)?'readonly':''} oninput="M.name=this.value" placeholder="Анна Иванова"></div>
 <div><label>Дата</label><input type="date" value="${M.date}" oninput="M.date=this.value"></div></div>
-<label>Примечание мастера</label><textarea oninput="M.note=this.value" placeholder="Короткое вступление для клиента">${E(M.note)}</textarea></div>
+<label>Приветствие для клиента</label><textarea style="min-height:110px" oninput="M.note=this.value" placeholder="Короткое вступление для клиента">${E(M.note)}</textarea></div>
+${(mlist('nots').length?`<div class="card"><h2>Начнём с «НЕ»</h2><p class="cd2">Отметьте, что войдёт в памятку. Формулировки меняются в «Настройки» → «Шаблоны».</p>${mlist('nots').map(n=>`<label class="tr"><input type="checkbox" ${M.nots&&M.nots[n.id]?'checked':''} onchange="M.nots=M.nots||{};M.nots['${n.id}']=this.checked"><span>${E(n.t)}${n.gone?'<span class="mut sm" style="display:block">Удалено из шаблонов, осталось в этой памятке</span>':''}</span></label>`).join('')}</div>`:'')}
 <div class="mchips" id="mch">${mchipsH()}</div>`+
 memoCats().map((c,i)=>{const ps=D.prods.filter(p=>p.cat==c.id&&(!p.arch||M.sel[p.id]));
 return `<div class="card mcard" id="mc-${c.id}"><h2 class="ct"><i>0${i+1}</i>${E(cap(c.name))}</h2>${c.why?`<p class="cd2">${E(c.why)}</p>`:''}`+
-(ps.length?`<div class="g2">${ps.map(p=>`<label class="pi mp"><input type="checkbox" ${M.sel[p.id]?'checked':''} onchange="M.sel['${p.id}']=this.checked;mchips()">${p.img?`<img src="${p.img}" alt="" onclick="event.preventDefault();zi('${p.id}')">`:'<span class="ph"></span>'}<span><b>${E(p.name)}</b>${p.arch?`<br><span class="mut">Удалено из базы, осталось в этой памятке</span>`:''}</span></label>`).join('')}</div>`:'<p class="mut">В этой категории пока нет средств. Добавьте их в «Базе средств».</p>')+
+(ps.length?`<div class="g2">${ps.map(p=>`<label class="pi mp"><input type="checkbox" ${M.sel[p.id]?'checked':''} onchange="M.sel['${p.id}']=this.checked;mchips()">${p.img?`<img src="${p.img}" alt="" onclick="event.preventDefault();zi('${p.id}')">`:'<span class="ph"></span>'}<span><b>${E(p.name)}</b>${p.arch?`<br><span class="mut">Удалено из базы, осталось в этой памятке</span>`:''}</span></label>`).join('')}</div>`:'<p class="mut">В этой категории пока нет средств. Добавьте их во вкладке «Средства».</p>')+
 `<label>Комментарий мастера к разделу</label><textarea placeholder="Например: чередовать с маской" oninput="M.cc['${c.id}']=this.value">${E(M.cc[c.id])}</textarea></div>`}).join('')+
+(mlist('steps').length?`<div class="card"><h2>Порядок ухода по шагам</h2><p class="cd2">Отметьте шаги, которые войдут в памятку. Тексты меняются в «Настройки» → «Шаблоны».</p>${mlist('steps').map(n=>`<label class="tr"><input type="checkbox" ${M.steps&&M.steps[n.id]?'checked':''} onchange="M.steps=M.steps||{};M.steps['${n.id}']=this.checked"><span><b>${E(n.h)}</b><span class="mut sm" style="display:block">${E(n.t)}</span>${n.gone?'<span class="mut sm" style="display:block">Удалено из шаблонов, осталось в этой памятке</span>':''}</span></label>`).join('')}</div>`:'')+
 `<div class="card"><h2>Рекомендации мастера</h2><textarea style="min-height:140px;margin-top:12px" oninput="M.rec=this.value" placeholder="— Спать на шёлковой наволочке&#10;— Не расчёсывать сухие волосы">${E(M.rec)}</textarea></div>
+<div class="card"><h2>Финальные слова</h2><textarea style="min-height:110px;margin-top:12px" oninput="M.bye=this.value" placeholder="Тёплые слова и подпись">${E(M.bye)}</textarea></div>
 <button class="btn" style="width:100%" onclick="sv();go('pdf')">Сформировать памятку</button>
 <div class="qb">${memoBack()}<button class="btn l" onclick="mrs()">Начать заново</button></div>`}
 
 /* База средств */
-function vProds(){return `<div class="top"><div><div class="eyebrow">Ваши продукты</div><h1>База средств</h1></div><button class="btn" onclick="edP()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить средство</button></div>
+function vProds(){return `<div class="top"><div><div class="eyebrow">Ваши продукты</div><h1>Средства</h1></div><div class="tb"><button class="btn l" onclick="goCats()">Категории</button><button class="btn" onclick="edP()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить средство</button></div></div>
 <div class="row" style="margin:18px 0 22px"><div class="se" style="flex:3"><input id="q" placeholder="Поиск по названию" oninput="lp()"><button type="button" class="xc" aria-label="Очистить поиск" onclick="$('#q').value='';lp();$('#q').focus()">×</button></div><select id="fc" onchange="lp()"><option value="">Все категории</option>${sorted().map(c=>`<option value="${c.id}">${E(c.name)}</option>`).join('')}</select></div><div class="pgl" id="pl"></div>`}
 function zi(id){const p=D.prods.find(x=>x.id==id);if(!p||!p.img)return toast('У этого средства нет фото');
 $('#zd').innerHTML=`<img src="${p.img}" alt=""><h3>${E(p.name)}</h3><button class="btn l" onclick="$('#zd').close()">Закрыть</button>`;$('#zd').showModal()}
@@ -487,15 +603,15 @@ function dP(id){const u=D.memos.filter(m=>m.sel[id]).length;ask(u?'Средст�
 
 /* Категории */
 function catCard(c,dom,delFn,saveFn){return `<div class="card" id="c${dom}"><div class="row"><div style="flex:5"><label>Название</label><input data-k="name" value="${E(c.name)}" placeholder="Например: МАСКА"></div><div style="flex:1;min-width:90px"><label>Порядок</label><input data-k="o" type="number" value="${c.o}"></div></div>
-<div class="row"><div><label>Назначение</label><textarea data-k="why">${E(c.why)}</textarea></div><div><label>Как применять</label><textarea data-k="how">${E(c.how)}</textarea></div><div><label>Когда / как часто</label><textarea data-k="when">${E(c.when)}</textarea></div></div>
+<div class="row"><div><label>Назначение</label><textarea data-k="why">${E(c.why)}</textarea></div><div><label>Когда / как часто</label><textarea data-k="when">${E(c.when)}</textarea></div></div>
 <div class="bar"><button class="ib" aria-label="Удалить" title="Удалить" onclick="${delFn}('${dom}')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button><button class="btn" onclick="${saveFn}('${dom}')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Сохранить</button></div></div>`}
-function vCats(){return `<div class="top"><h1>Категории</h1><button class="btn" onclick="aC()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить категорию</button></div><div style="margin-top:22px">`+
+function vCats(){return `<p><a onclick="go('prods')" style="cursor:pointer;color:var(--acc)">← К средствам</a></p><div class="top"><h1>Категории</h1><button class="btn" onclick="aC()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить категорию</button></div><div style="margin-top:22px">`+
 sorted().map(c=>catCard(c,c.id,'xC','sC')).join('')+
 DR.map(c=>catCard(c,c.tid,'rD','sD')).join('')+'</div>'}
 function rdVals(dom){const o={};document.querySelectorAll('#c'+dom+' [data-k]').forEach(e=>o[e.dataset.k]=e.dataset.k=='o'?+e.value||0:e.value);return o}
 function sC(id){const c=D.cats.find(x=>x.id==id),v=rdVals(id);if(!v.name.trim())return toast('Введите название категории');Object.assign(c,v);save();toast('Категория сохранена')}
 function aC(){DR.push({tid:uid(),name:'',o:Math.max(0,...D.cats.map(c=>c.o),0)+DR.length+1,why:'',how:'',when:''});go('cats')}
-function sD(tid){const idx=DR.findIndex(c=>c.tid==tid);if(idx<0)return;const v=rdVals(tid);if(!v.name.trim())return toast('Введите название категории перед сохранением');D.cats.push({id:uid(),name:v.name,o:v.o,why:v.why,how:v.how,when:v.when});DR.splice(idx,1);save();go('cats');toast('Категория добавлена')}
+function sD(tid){const idx=DR.findIndex(c=>c.tid==tid);if(idx<0)return;const v=rdVals(tid);if(!v.name.trim())return toast('Введите название категории перед сохранением');D.cats.push({id:uid(),name:v.name,o:v.o,why:v.why,how:'',when:v.when});DR.splice(idx,1);save();go('cats');toast('Категория добавлена')}
 function rD(tid){DR=DR.filter(c=>c.tid!=tid);go('cats')}
 function xC(id){const used=D.prods.filter(p=>p.cat==id&&D.memos.some(m=>m.sel[p.id]));
 ask('Удалить категорию вместе со средствами из неё?'+(used.length?' В уже сделанных памятках они останутся.':''),()=>{
@@ -534,7 +650,7 @@ function chatIcons(c){if(!c)return '';const p=nph(c.phone),t=ntl(c.tl),a=[];
  if(t)a.push(`<a class="cb" aria-label="Telegram" title="Telegram" href="https://t.me/${encodeURIComponent(t)}" target="_blank" rel="noopener">${IT}</a>`);
  return a.length?`<div class="cht"><span>Чат с клиентом</span>${a.join('')}</div>`:`<p class="mut" style="font-size:13px;margin:10px 0 0">Добавьте телефон или Telegram в карточку клиента, и здесь появятся значки чатов.</p>`}
 async function build(){
- const s=D.set,cs=allCats().filter(c=>D.prods.some(p=>p.cat==c.id&&M.sel[p.id])),IM={},cv=[];
+ const s=D.set,SN=M.snap||mkSnap(M),cs=[...SN.cats].sort((a,b)=>a.o-b.o).filter(c=>SN.prods.some(p=>p.cat==c.id)),IM={},cv=[];
  try{await Promise.all([document.fonts.load('600 40px Lora'),document.fonts.load('400 24px Manrope'),document.fonts.load('700 24px Manrope')])}catch(e){}
  for(const p of D.prods)if(M.sel[p.id])IM[p.id]=await loadImg(p.img);
  const qi=await loadImg(MASTER.qr);let c,x,y;
@@ -553,24 +669,37 @@ async function build(){
   x.fillStyle='#fff';x.fillRect(X+14,Y+14,TH,TH);x.strokeStyle=LN;x.lineWidth=2;x.strokeRect(X+14,Y+14,TH,TH);
   const im=IM[t.p.id];if(im){const r=Math.min((TH-12)/im.width,(TH-12)/im.height),w=im.width*r,h2=im.height*r;x.drawImage(im,X+14+(TH-w)/2,Y+14+(TH-h2)/2,w,h2)}
   let yy=Y+14;t.sg.forEach((g,i)=>{x.font=g[1];x.fillStyle=g[2];t.L[i].forEach(l=>{x.fillText(l,X+14+TH+14,yy);yy+=g[3]})})},
- P=t=>{t=String(t||'').trim();return t&&!/[.!?…]$/.test(t)?t+'.':t};
+ P=t=>{t=String(t||'').trim();return t&&!/[.!?…]$/.test(t)?t+'.':t},
+ sec=(t,h1)=>{need(56+22+44+6+h1);if(y>MT){y+=56;x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=22}txt(t,MX,CW,'600 32px '+SE,AC,44);y+=6},
+ dot=(X,Y)=>{x.fillStyle=AC;x.beginPath();x.arc(X,Y,6,0,7);x.fill()};
  np();
  x.font='700 17px '+SA;x.fillStyle=MU;x.fillText('ПЕРСОНАЛЬНАЯ ПАМЯТКА',MX,y);y+=34;
  txt('Уход за волосами',MX,CW,'600 46px '+SE,AC,54);y+=6;
  txt((M.name||'—')+' · '+fd(M.date),MX,CW,'500 24px '+SA,MU,32);y+=14;
  if(M.note){const L=wrap(M.note,CW-56,'400 22px '+SA),h=L.length*32+36;need(h);x.fillStyle=BG;x.fillRect(MX,y,CW,h);x.fillStyle=AC;x.fillRect(MX,y,5,h);x.font='400 22px '+SA;x.fillStyle=K1;L.forEach((l,i)=>x.fillText(l,MX+28,y+18+i*32));y+=h+10}
+  const nl=SN.nots;
+ if(nl.length){const it=nl.map(n=>wrap(n.t,CW-44,'400 22px '+SA));sec('Начнём с «НЕ»',it[0].length*32+10);
+  it.forEach(L=>{need(L.length*32+10);dot(MX+8,y+16);x.font='400 22px '+SA;x.fillStyle=K1;L.forEach((l,i)=>x.fillText(l,MX+44,y+i*32));y+=L.length*32+10})}
+ if(cs.length&&(nl.length||SN.steps.length)){sec('Мой уход',60+46+12+28+10+84)}
  if(!cs.length){y+=20;txt('Средства не выбраны.',MX,CW,'400 22px '+SA,MU,32)}
  cs.forEach((cat,i)=>{
-  const ts=D.prods.filter(p=>p.cat==cat.id&&M.sel[p.id]).map(tlay),
-   dl=wrap([cat.why,cat.how,cat.when].filter(Boolean).map(P).join(' '),CW,'400 20px '+SA),
+  const ts=SN.prods.filter(p=>p.cat==cat.id).map(tlay),
+   dl=wrap([cat.why,cat.when].filter(Boolean).map(P).join(' '),CW,'400 20px '+SA),
    h0=Math.max(0,...ts.slice(0,2).map(t=>t.h));
-  need(46+12+dl.length*28+10+h0+12);if(y>MT)y+=24;
+  const gp=y>MT?(i?60:24):0;need(gp+46+12+dl.length*28+10+h0+12);y+=gp;
   x.font='600 32px '+SE;x.fillStyle=AC;x.fillText((i+1)+'. '+cat.name,MX,y);y+=46;
   x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=12;
   dl.forEach(l=>{x.font='400 20px '+SA;x.fillStyle=MU;x.fillText(l,MX,y);y+=28});y+=10;
   for(let k=0;k<ts.length;k+=2){const a=ts[k],b=ts[k+1],h=Math.max(a.h,b?b.h:0);need(h+12);tdraw(a,MX,y,h);if(b)tdraw(b,MX+TW+16,y,h);y+=h+12}
   if(M.cc[cat.id]){need(66);y+=4;x.font='700 15px '+SA;x.fillStyle=MU;x.fillText('КОММЕНТАРИЙ МАСТЕРА',MX,y);y+=24;txt(M.cc[cat.id],MX,CW,'400 21px '+SA,K1,30)}});
- if(M.rec){need(120);y+=26;x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=22;txt('Рекомендации мастера',MX,CW,'600 32px '+SE,AC,44);y+=6;txt(M.rec,MX,CW,'400 21px '+SA,K1,30)}
+  const sl=SN.steps;
+  if(sl.length){const it=sl.map(n=>{const H=wrap(n.h,CW-70,'700 24px '+SA),L=wrap(n.t,CW-70,'400 21px '+SA);return{H,L,h:H.length*34+L.length*30+26}});
+   sec('Порядок ухода по шагам',it[0].h);
+   it.forEach((o,i)=>{need(o.h);x.fillStyle=AC;x.beginPath();x.arc(MX+22,y+20,20,0,7);x.fill();x.fillStyle='#fff';x.font='700 22px '+SA;x.textAlign='center';x.fillText(String(i+1),MX+22,y+9);x.textAlign='left';
+    let yy=y;x.font='700 24px '+SA;x.fillStyle=K1;o.H.forEach(l=>{x.fillText(l,MX+64,yy+4);yy+=34});
+    x.font='400 21px '+SA;x.fillStyle=K1;o.L.forEach(l=>{x.fillText(l,MX+64,yy);yy+=30});y+=o.h})}
+  if(M.rec){need(150);y+=56;x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=22;txt('Рекомендации мастера',MX,CW,'600 32px '+SE,AC,44);y+=6;txt(M.rec,MX,CW,'400 21px '+SA,K1,30)}
+  if((M.bye||'').trim()){need(170);y+=56;x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=28;txt(M.bye.trim(),MX,CW,'600 30px '+SE,AC,46)}
  const LK=cv.map(()=>[]),
  it=[[MASTER.n,''],[fph(MASTER.p),'tel:'+MASTER.p],['@'+MASTER.i,'https://instagram.com/'+MASTER.i]];
  cv.forEach((g,pi)=>{const t=g.getContext('2d');t.textBaseline='top';
@@ -608,15 +737,22 @@ async function mk(){let u,k;
  $('#bs').disabled=false;$('#bd').disabled=false}
 function fdl(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},5000)}
 function dl(){fdl(PB,fn())}
-function sh(){let f,ok=false;try{f=new File([PB],fn(),{type:'application/pdf'});ok=navigator.canShare&&navigator.canShare({files:[f]})}catch(e){}
- if(ok)navigator.share({files:[f]}).catch(()=>{});else{dl();toast('На этом устройстве «Поделиться» недоступно. PDF скачан, прикрепите его в мессенджере вручную.')}}
+async function sh(){const inapp=/Telegram|Instagram|FBAN|FBAV|FB_IAB|Viber|Line\//i.test(navigator.userAgent||''),
+ mkF=n=>{try{const x=new File([PB],n,{type:'application/pdf'});return navigator.canShare&&navigator.canShare({files:[x]})?x:null}catch(e){return null}};
+ let f=mkF(fn())||mkF('pamyatka.pdf');
+ if(!f){dl();return toast(inapp?'Внутри мессенджера «Поделиться» не работает. PDF скачан. Откройте приложение в обычном браузере (Safari или Chrome) или через значок на экране «Домой».':'На этом устройстве «Поделиться» недоступно. PDF скачан, прикрепите его в мессенджере вручную.',9000)}
+ try{await navigator.share({files:[f]})}catch(e){
+  if(e&&e.name=='AbortError')return;
+  const g=mkF('pamyatka.pdf');
+  if(g&&g.name!=f.name){try{await navigator.share({files:[g]});return}catch(e2){if(e2&&e2.name=='AbortError')return}}
+  dl();toast('Не удалось открыть «Поделиться» ('+((e&&e.name)||'ошибка')+'). PDF скачан, прикрепите его в мессенджере вручную.',9000)}}
 const nac=()=>document.querySelectorAll('input,textarea').forEach(e=>{if(e.getAttribute('autocomplete')!='off')e.setAttribute('autocomplete','off')});
 new MutationObserver(nac).observe(document.body,{childList:true,subtree:true});
 /* ===== Google Диск: база хранится в скрытой папке приложения на Диске мастера ===== */
 function dsave(){try{localStorage.setItem(GK,JSON.stringify(DS))}catch(e){}}
 function tokOk(){return !!(GT&&GT.exp>Date.now()+60000)}
 function fdt(t){return new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
-function dsUi(){const e=$('#ds');if(!e)return;e.textContent=!DS.on?'':DS.conflict?'☁ версии расходятся':DS.dirty?'☁ не сохранено':'☁ сохранено';e.style.fontWeight=DS.on&&(DS.dirty||DS.conflict)?'600':''}
+function dsUi(){const e=$('#ds');if(!e)return;e.textContent=!DS.on?'☁':DS.conflict?'☁ версии расходятся':DS.dirty?'☁ не сохранено':'☁ сохранено';e.style.fontWeight=DS.on&&(DS.dirty||DS.conflict)?'600':''}
 function dsMark(){if(!DS.on)return;DS.v=(DS.v||0)+1;if(!DS.dirty||!DS.dsince)DS.dsince=Date.now();DS.dirty=1;dsave();dsUi();if(!DS.conflict){clearTimeout(gtm);gtm=setTimeout(auto,2500)}}
 function rfs(){if(CV=='set'||CV=='home')go(CV)}
 
@@ -649,7 +785,7 @@ const v0=DS.v||0,j=await rput(m&&m.id,JSON.stringify(D));
 DS.rm=j.modifiedTime;DS.last=Date.now();DS.conflict=0;if((DS.v||0)==v0)DS.dirty=0;dsave();dsUi();gck=true;return {ok:1}}
 finally{gbusy=false}}
 function auto(){if(!DS.on||DS.conflict||gbusy||!tokOk())return;
-upl(false).then(r=>{if(r&&r.c)toast('На Диске другая версия базы. Откройте «Сохранение базы» и выберите, какую оставить.')}).catch(()=>{})}
+upl(false).then(r=>{if(r&&r.c)toast('На Диске другая версия базы. Откройте «Настройки» → «Сохранение» и выберите, какую оставить.')}).catch(()=>{})}
 
 function derr(e){const m=String(e&&e.message||e);
 toast(/noid/.test(m)?'Подключение к Диску ещё не настроено.':
