@@ -375,8 +375,7 @@ function memoRow(m,back){return `<div class="mr"><div><b>${E(m.name)||'Без и
 function bkBanner(){return `<div class="card bk bn"><b>Пора сохранить копию файлом</b><p class="mut" style="margin:6px 0 14px">Прошёл месяц с последней копии. Скачайте файл с базой на телефон: это запасной вариант, если что-то пойдёт не так.</p><button class="btn" onclick="ex()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Скачать копию</button> <button class="btn l" onclick="bkLater()">Позже</button></div>`}
 function bkLater(){D.meta.bsnz=Date.now()+7*864e5;try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}go('home')}
 function vHome(){const rv=[...D.visits].filter(v=>D.clients.some(c=>c.id==v.cid)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-return `${drCard(1)}${needsBackup()?bkBanner():''}<h1 style="font-size:24px;line-height:1.25">Приветствую, Надежда</h1>
-<div class="hm"><button class="hc dk" onclick="go('clients')"><b>КЛИЕНТЫ</b><span>Карточки клиентов, журнал визитов и памятки</span></button><button class="hc" onclick="go('prods')"><b>СРЕДСТВА</b><span>Добавить и отредактировать продукты</span></button></div>
+return `${drCard(1)}${needsBackup()?bkBanner():''}<div class="hm" style="margin-top:0"><button class="hc dk" onclick="go('clients')"><b>КЛИЕНТЫ</b><span>Карточки клиентов, журнал визитов и памятки</span></button><button class="hc" onclick="go('prods')"><b>СРЕДСТВА</b><span>Добавить и отредактировать продукты</span></button></div>
 <div class="top" style="margin-top:40px;margin-bottom:16px"><h2>Последние визиты</h2><a onclick="go('clients')" style="cursor:pointer;color:var(--acc)">Все клиенты →</a></div>
 <div class="plist">${rv.map(v=>{const c=D.clients.find(x=>x.id==v.cid);return `<button class="pl" onclick="oc('${c.id}')"><span><b>${E(c.name)}</b><br><span class="mut sm">${fd(v.date)} · ${E(v.svcs.join(', '))}${D.memos.some(m=>m.vid==v.id)?' · есть памятка':''}</span></span><span class="chev" aria-hidden="true">›</span></button>`}).join('')||`<p class="mut" style="margin:0">Пока нет визитов. Откройте клиента в разделе «Клиенты» и добавьте первый визит.</p>`}</div>`}
 function vClients(){return `${drCard()}${needsBackup()?bkBanner():''}<div class="top"><h1>Клиенты</h1><div class="ac"><button class="btn" onclick="edC()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Добавить клиента</button><a class="ln" tabindex="0" role="button" style="color:var(--mut)" onclick="gm()" onkeydown="if(event.key=='Enter')gm()">Сделать рассылку</a></div></div>
@@ -737,15 +736,16 @@ async function mk(){let u,k;
  $('#bs').disabled=false;$('#bd').disabled=false}
 function fdl(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},5000)}
 function dl(){fdl(PB,fn())}
-async function sh(){const inapp=/Telegram|Instagram|FBAN|FBAV|FB_IAB|Viber|Line\//i.test(navigator.userAgent||''),
+function shMsg(t){const m=$('#pm');if(m)m.textContent=t;toast(t,12000)}
+async function sh(){const ua=navigator.userAgent||'',dv=/iPhone|iPad|iPod/.test(ua)?'iOS':/Android/.test(ua)?'Android':'компьютер',inapp=/Telegram|Instagram|FBAN|FBAV|FB_IAB|Viber|Line\//i.test(navigator.userAgent||''),
  mkF=n=>{try{const x=new File([PB],n,{type:'application/pdf'});return navigator.canShare&&navigator.canShare({files:[x]})?x:null}catch(e){return null}};
  let f=mkF(fn())||mkF('pamyatka.pdf');
- if(!f){dl();return toast(inapp?'Внутри мессенджера «Поделиться» не работает. PDF скачан. Откройте приложение в обычном браузере (Safari или Chrome) или через значок на экране «Домой».':'На этом устройстве «Поделиться» недоступно. PDF скачан, прикрепите его в мессенджере вручную.',9000)}
+ if(!f){dl();return shMsg(inapp?'Внутри мессенджера «Поделиться» не работает. PDF скачан. Откройте приложение в обычном браузере (Safari или Chrome) или через значок на экране «Домой».':'Этот браузер не умеет отправлять файл через «Поделиться» ('+dv+'). PDF скачан, прикрепите его в мессенджере вручную.')}
  try{await navigator.share({files:[f]})}catch(e){
   if(e&&e.name=='AbortError')return;
   const g=mkF('pamyatka.pdf');
   if(g&&g.name!=f.name){try{await navigator.share({files:[g]});return}catch(e2){if(e2&&e2.name=='AbortError')return}}
-  dl();toast('Не удалось открыть «Поделиться» ('+((e&&e.name)||'ошибка')+'). PDF скачан, прикрепите его в мессенджере вручную.',9000)}}
+  dl();shMsg('Не удалось открыть «Поделиться» (код: '+((e&&e.name)||'ошибка')+', '+dv+'). PDF скачан, прикрепите его в мессенджере вручную.')}}
 const nac=()=>document.querySelectorAll('input,textarea').forEach(e=>{if(e.getAttribute('autocomplete')!='off')e.setAttribute('autocomplete','off')});
 new MutationObserver(nac).observe(document.body,{childList:true,subtree:true});
 /* ===== Google Диск: база хранится в скрытой папке приложения на Диске мастера ===== */
