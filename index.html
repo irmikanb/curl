@@ -635,7 +635,7 @@ function applyData(d,lb){D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.clients=D.c
 function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;applyData(d,true);toast('Копия загружена');go('home')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
 
 /* Предпросмотр и PDF (страницы рисуются на canvas, PDF собирается без библиотек) */
-const PW=1240,PH=1754,MX=90,MT=90,MB=150,CW=PW-2*MX,SE='Lora,Georgia,serif',SA='Manrope,system-ui,sans-serif',
+const PW=1240,PH=1754,PXW=1654,PXH=2339,PSC=PXW/PW,MX=90,MT=90,MB=150,CW=PW-2*MX,SE='Lora,Georgia,serif',SA='Manrope,system-ui,sans-serif',
 /* прежние цвета PDF: AC #a67c62, MU #7a716a, BG #f6f4ef, LN #e4ded6 */
 K1='#231814',AC='#AF5331',MU='#78645B',BG='#F3E5D6',LN='#E1D5CA';
 let PB=null;
@@ -653,21 +653,20 @@ async function build(){
  try{await Promise.all([document.fonts.load('600 40px Lora'),document.fonts.load('400 24px Manrope'),document.fonts.load('700 24px Manrope')])}catch(e){}
  for(const p of D.prods)if(M.sel[p.id])IM[p.id]=await loadImg(p.img);
  const qi=await loadImg(MASTER.qr);let c,x,y;
- const np=()=>{c=document.createElement('canvas');c.width=PW;c.height=PH;x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,PW,PH);x.textBaseline='top';cv.push(c);y=MT},
+ const np=()=>{c=document.createElement('canvas');c.width=PXW;c.height=PXH;x=c.getContext('2d');x.scale(PSC,PSC);x.fillStyle='#fff';x.fillRect(0,0,PW,PH);x.textBaseline='top';cv.push(c);y=MT},
  need=h=>{if(y+h>PH-MB)np()},
  wrap=(t,w,f)=>{x.font=f;const o=[];String(t||'').split('\n').forEach(q=>{let l='';q.split(' ').forEach(wd=>{const t2=l?l+' '+wd:wd;if(x.measureText(t2).width>w&&l){o.push(l);l=wd}else l=t2});o.push(l)});return o},
  txt=(t,X,w,f,col,lh)=>wrap(t,w,f).forEach(l=>{need(lh);x.font=f;x.fillStyle=col;x.fillText(l,X,y);y+=lh}),
  line=()=>{x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=2},
  rr=(X,Y,W,H,R)=>{x.beginPath();x.moveTo(X+R,Y);x.arcTo(X+W,Y,X+W,Y+H,R);x.arcTo(X+W,Y+H,X,Y+H,R);x.arcTo(X,Y+H,X,Y,R);x.arcTo(X,Y,X+W,Y,R);x.closePath()},
- TW=(CW-16)/2,TH=84,
+ TW=(CW-16)/2,TH=156,
  tlay=p=>{const w=TW-TH-40,sg=[[p.name,'700 22px '+SA,K1,28]];
   if(p.com)sg.push([p.com,'400 19px '+SA,K1,25]);
   const L=sg.map(g=>wrap(g[0],w,g[1])),th=sg.reduce((a,g,i)=>a+L[i].length*g[3],0);
-  return{p,sg,L,h:Math.max(TH,th)+28}},
+  return{p,sg,L,th,h:Math.max(TH,th)+28}},
  tdraw=(t,X,Y,H)=>{rr(X,Y,TW,H,10);x.fillStyle='#fff';x.fill();x.strokeStyle='#DBCFC4';x.lineWidth=1.5;x.stroke();
-  x.fillStyle='#fff';x.fillRect(X+14,Y+14,TH,TH);x.strokeStyle=LN;x.lineWidth=2;x.strokeRect(X+14,Y+14,TH,TH);
-  const im=IM[t.p.id];if(im){const r=Math.min((TH-12)/im.width,(TH-12)/im.height),w=im.width*r,h2=im.height*r;x.drawImage(im,X+14+(TH-w)/2,Y+14+(TH-h2)/2,w,h2)}
-  let yy=Y+14;t.sg.forEach((g,i)=>{x.font=g[1];x.fillStyle=g[2];t.L[i].forEach(l=>{x.fillText(l,X+14+TH+14,yy);yy+=g[3]})})},
+  const im=IM[t.p.id];if(im){const r=Math.min(TH/im.width,TH/im.height),w=im.width*r,h2=im.height*r;x.drawImage(im,X+14+(TH-w)/2,Y+14+(TH-h2)/2,w,h2)}
+  let yy=Y+14+Math.max(0,(Math.max(TH,H-28)-t.th)/2);t.sg.forEach((g,i)=>{x.font=g[1];x.fillStyle=g[2];t.L[i].forEach(l=>{x.fillText(l,X+14+TH+14,yy);yy+=g[3]})})},
  P=t=>{t=String(t||'').trim();return t&&!/[.!?…]$/.test(t)?t+'.':t},
  sec=(t,h1)=>{need(56+22+44+6+h1);if(y>MT){y+=56;x.fillStyle=LN;x.fillRect(MX,y,CW,2);y+=22}txt(t,MX,CW,'600 32px '+SE,AC,44);y+=6},
  dot=(X,Y)=>{x.fillStyle=AC;x.beginPath();x.arc(X,Y,6,0,7);x.fill()};
@@ -711,7 +710,7 @@ async function build(){
    if(u){t.fillRect(fx,fy+27,w,1.5);LK[pi].push({x:fx,y:fy-2,w,h:32,u})}
    fx+=w;if(i<its.length-1){t.fillStyle=MU;t.fillText('  ·  ',fx,fy);fx+=t.measureText('  ·  ').width}});
   if(qi){const r=Math.min(90/qi.width,90/qi.height);t.drawImage(qi,PW-MX-qi.width*r,PH-112,qi.width*r,qi.height*r)}});
- return{u:cv.map(g=>g.toDataURL('image/jpeg',.92)),k:LK}}
+ return{u:cv.map(g=>g.toDataURL('image/jpeg',.9)),k:LK}}
 function pdf(u,k){const en=new TextEncoder(),P=[],O=[],N=u.length;let n=0;
  const put=d=>{const b=typeof d=='string'?en.encode(d):d;P.push(b);n+=b.length},
  ob=(i,...b)=>{O[i]=n;put(i+' 0 obj\n');b.forEach(put);put('\nendobj\n')};
@@ -721,7 +720,7 @@ function pdf(u,k){const en=new TextEncoder(),P=[],O=[],N=u.length;let n=0;
  u.forEach((s,i)=>{const b=Uint8Array.from(atob(s.split(',')[1]),ch=>ch.charCodeAt(0)),p=3+3*i,ct='q 595.28 0 0 841.89 0 0 cm /I Do Q';
   ob(p,'<</Type/Page/Parent 2 0 R/MediaBox[0 0 595.28 841.89]/Resources<</XObject<</I '+(p+2)+' 0 R>>>>/Contents '+(p+1)+' 0 R/Annots['+(k[i]||[]).map(a=>{const f=595.28/PW,e=encodeURI(a.u).replace(/[()\\]/g,'\\$&');return '<</Type/Annot/Subtype/Link/Border[0 0 0]/Rect['+[a.x*f,841.89-(a.y+a.h)*f,(a.x+a.w)*f,841.89-a.y*f].map(v=>v.toFixed(2)).join(' ')+']/A<</S/URI/URI('+e+')>>>>'}).join('')+']>>');
   ob(p+1,'<</Length '+ct.length+'>>\nstream\n'+ct+'\nendstream');
-  ob(p+2,'<</Type/XObject/Subtype/Image/Width '+PW+'/Height '+PH+'/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length '+b.length+'>>\nstream\n',b,'\nendstream')});
+  ob(p+2,'<</Type/XObject/Subtype/Image/Width '+PXW+'/Height '+PXH+'/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length '+b.length+'>>\nstream\n',b,'\nendstream')});
  const x0=n,T=3*N+3;
  put('xref\n0 '+T+'\n0000000000 65535 f \n');
  for(let i=1;i<T;i++)put(String(O[i]).padStart(10,'0')+' 00000 n \n');
