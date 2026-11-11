@@ -619,7 +619,7 @@ if(used.length)D.cats.find(c=>c.id==id).arch=true;else D.cats=D.cats.filter(c=>c
 
 /* Настройки */
 function vSet(){const t=D.meta.lastBackup;if(GCID)gload().catch(()=>{});
-const fb=`<p class="mut" style="margin:0 0 10px">Скачайте файл и сохраните его, например, в «Файлах» или отправьте себе в Telegram. Пригодится, если Диск не подключается или нужно перенести базу вручную.</p><p style="margin:0 0 6px">Последняя копия в файл: <b>${t?new Date(t).toLocaleDateString('ru-RU'):'ещё не делали'}</b></p>
+const fb=`<p class="mut" style="margin:0 0 10px">Скачайте файл и сохраните его, например, в «Файлах» или отправьте себе в Telegram. Пригодится, если Google Диск не подключается или нужно перенести базу вручную.</p><p style="margin:0 0 6px">Последняя копия в файл: <b>${t?new Date(t).toLocaleDateString('ru-RU'):'ещё не делали'}</b></p>
 <div class="row" style="margin-top:6px"><button class="btn l" onclick="ex()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Скачать копию</button><button class="btn l" onclick="shBk()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>Отправить копию</button><label class="btn l" style="display:inline-flex;align-items:center;justify-content:center;margin:0">Восстановить из файла<input type="file" accept=".json,.txt,application/json,text/plain" hidden onchange="im(this.files[0])"></label></div><p class="mut sm" style="margin:10px 0 0">«Отправить копию» откроет список приложений: выберите Telegram (например, чат «Избранное») или «Сохранить в Файлы». Чтобы восстановить, сохраните файл из Telegram в «Файлы» и выберите его кнопкой «Восстановить из файла». При восстановлении текущая база заменяется данными из файла.</p>`,
 fc=GCID&&DS.on?`<details class="card" style="max-width:560px;margin-top:18px"><summary style="cursor:pointer;color:var(--mut);font-size:14px;padding:4px 0">Копия в файл (запасной вариант)</summary><div style="margin-top:14px">${fb}</div></details>`
 :`<div class="card" style="max-width:560px;margin-top:18px"><div class="eyebrow">Запасной вариант</div><h2 style="margin:4px 0 10px">Копия в файл</h2>${fb}</div>`;
@@ -752,7 +752,7 @@ async function sh(){const ua=navigator.userAgent||'',dv=/iPhone|iPad|iPod/.test(
   shMsg('Не удалось открыть «Поделиться» (код: '+((e&&e.name)||'ошибка')+((e&&e.message)?': '+e.message:'')+', '+dv+'). '+(first?'PDF скачан. Нажмите «Поделиться» ещё раз: попробуем с коротким именем файла. Или прикрепите скачанный PDF вручную.':'PDF уже скачан, прикрепите его в мессенджере вручную.'))}}
 const nac=()=>document.querySelectorAll('input,textarea').forEach(e=>{if(e.getAttribute('autocomplete')!='off')e.setAttribute('autocomplete','off')});
 new MutationObserver(nac).observe(document.body,{childList:true,subtree:true});
-/* ===== Google Диск: база хранится в скрытой папке приложения на Диске мастера ===== */
+/* ===== Google Диск: база хранится в скрытой папке приложения на Google Диске мастера ===== */
 function dsave(){try{localStorage.setItem(GK,JSON.stringify(DS))}catch(e){}}
 function tokOk(){return !!(GT&&GT.exp>Date.now()+60000)}
 function fdt(t){return new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
@@ -781,7 +781,7 @@ r=await gapi('https://www.googleapis.com/upload/drive/v3/files'+(id?'/'+id:'')+'
 return r.json()}
 async function rget(id){const r=await gapi('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media');return r.text()}
 
-/* Сохранить на Диск. force=true перезаписывает чужую версию без вопросов */
+/* Сохранить на Google Диск. force=true перезаписывает чужую версию без вопросов */
 async function upl(force){if(gbusy)return {busy:1};gbusy=true;
 try{const m=await rmeta();
 if(m&&!force&&m.modifiedTime!=DS.rm){DS.conflict=1;dsave();dsUi();return {c:1,m}}
@@ -789,59 +789,59 @@ const v0=DS.v||0,j=await rput(m&&m.id,JSON.stringify(D));
 DS.rm=j.modifiedTime;DS.last=Date.now();DS.conflict=0;if((DS.v||0)==v0)DS.dirty=0;dsave();dsUi();gck=true;return {ok:1}}
 finally{gbusy=false}}
 function auto(){if(!DS.on||DS.conflict||gbusy||!tokOk())return;
-upl(false).then(r=>{if(r&&r.c)toast('На Диске другая версия базы. Откройте «Настройки» → «Сохранение» и выберите, какую оставить.')}).catch(()=>{})}
+upl(false).then(r=>{if(r&&r.c)toast('На Google Диске другая версия базы. Откройте «Настройки» → «Сохранение» и выберите, какую оставить.')}).catch(()=>{})}
 
 function derr(e){const m=String(e&&e.message||e);
-toast(/noid/.test(m)?'Подключение к Диску ещё не настроено.':
+toast(/noid/.test(m)?'Подключение к Google Диску ещё не настроено.':
 /notready/.test(m)?'Связь с Google ещё загружается. Нажмите ещё раз через секунду.':
 /popup_blocked|popup_failed/.test(m)?'Браузер заблокировал окно входа в Google. Разрешите всплывающие окна и повторите.':
 /popup_closed|access_denied|user/.test(m)?'Вход в Google не выполнен.':
-/auth|http401|http403/.test(m)?'Нет доступа к Диску. Нажмите кнопку ещё раз и войдите в Google заново.':
-/bad/.test(m)?'Файл на Диске не подходит.':
+/auth|http401|http403/.test(m)?'Нет доступа к Google Диску. Нажмите кнопку ещё раз и войдите в Google заново.':
+/bad/.test(m)?'Файл на Google Диске не подходит.':
 /Failed to fetch|NetworkError|Load failed/.test(m)?'Нет связи с интернетом или с Google.':
-'Не удалось связаться с Диском ('+m+').')}
+'Не удалось связаться с Google Диском ('+m+').')}
 
 function dlg(t,p,bs){DK=bs.map(b=>b[1]);
 $('#dg').innerHTML=`<h2>${E(t)}</h2><p style="margin:12px 0 0">${E(p)}</p><div class="bar" style="flex-wrap:wrap">${bs.map((b,i)=>`<button class="btn ${b[2]||''}" onclick="dk(${i})">${E(b[0])}</button>`).join('')}</div>`;
 if(!$('#dg').open)$('#dg').showModal()}
 function dk(i){const f=DK[i];$('#dg').close();if(f)f()}
 
-function dConf(m){dlg('На Диске другая версия','На Диске есть база, сохранённая '+fdt(m.modifiedTime)+'. На этом устройстве данные менялись отдельно. Выберите, какую версию оставить: вторая будет заменена.',
-[['Загрузить с Диска',()=>dPull(true)],['Перезаписать Диск этой версией',dPushF,'l'],['Отмена',null,'l']])}
-function dPush(){gauth().then(()=>upl(false)).then(r=>{if(r&&r.c)dConf(r.m);else if(r&&r.ok){toast('Сохранено на Диск');rfs()}}).catch(derr)}
-function dPushF(){gauth().then(()=>upl(true)).then(()=>{toast('Сохранено на Диск');rfs()}).catch(derr)}
+function dConf(m){dlg('В Google Диске другая версия','В Google Диске (в вашем аккаунте Google) есть база, сохранённая '+fdt(m.modifiedTime)+'. На этом устройстве данные менялись отдельно. Выберите, какую версию оставить: вторая будет заменена.',
+[['Взять базу из Google Диска',()=>dPull(true)],['Заменить Google Диск базой с этого устройства',dPushF,'l'],['Отмена',null,'l']])}
+function dPush(){gauth().then(()=>upl(false)).then(r=>{if(r&&r.c)dConf(r.m);else if(r&&r.ok){toast('Сохранено на Google Диск');rfs()}}).catch(derr)}
+function dPushF(){gauth().then(()=>upl(true)).then(()=>{toast('Сохранено на Google Диск');rfs()}).catch(derr)}
 function dPull(force){if(gbusy)return;
 gauth().then(async()=>{const m=await rmeta();
-if(!m){toast('На Диске пока нет сохранённой базы');return}
-if(!force&&DS.dirty){dlg('Есть несохранённые изменения','На этом устройстве есть изменения, которых нет на Диске. Если загрузить версию с Диска, они пропадут.',[['Загрузить с Диска',()=>dPull(true)],['Отмена',null,'l']]);return}
+if(!m){toast('На Google Диске пока нет сохранённой базы');return}
+if(!force&&DS.dirty){dlg('Есть несохранённые изменения','На этом устройстве есть изменения, которых нет в Google Диске. Если взять базу из Google Диска, эти изменения пропадут.',[['Загрузить с Google Диска',()=>dPull(true)],['Отмена',null,'l']]);return}
 gbusy=true;let t;try{t=await rget(m.id)}finally{gbusy=false}
 let d;try{d=JSON.parse(t)}catch(e){throw new Error('bad')}
 if(!d||!d.cats||!d.prods)throw new Error('bad');
 SQ=1;try{applyData(d)}finally{SQ=0}
 DS.rm=m.modifiedTime;DS.dirty=0;DS.conflict=0;DS.last=Date.now();dsave();dsUi();gck=true;
-toast('База загружена с Диска');go('home')}).catch(derr)}
+toast('База загружена с Google Диска');go('home')}).catch(derr)}
 function dConn(){gauth().then(async()=>{const m=await rmeta();DS={on:1,conflict:1};dsave();
-if(!m){await upl(true);toast('Google Диск подключён, база сохранена на Диск');rfs();return}
-dlg('На Диске уже есть база','На Диске найдена база от '+fdt(m.modifiedTime)+'. Если это другое устройство, загрузите её сюда. Если главная база здесь, перезапишите Диск.',
-[['Загрузить с Диска',()=>dPull(true)],['Перезаписать Диск этой базой',dPushF,'l'],['Отмена',()=>{DS={};dsave();dsUi();rfs()},'l']])}).catch(derr)}
+if(!m){await upl(true);toast('Google Диск подключён, база сохранена на Google Диск');rfs();return}
+dlg('В вашем Google Диске уже есть база','В Google Диске (в вашем аккаунте Google, в интернете) найдена база от '+fdt(m.modifiedTime)+'. В приложении на этом устройстве тоже есть своя база. Выберите, какую оставить: вторая будет заменена.',
+[['Взять базу из Google Диска',()=>dPull(true)],['Заменить Google Диск базой с этого устройства',dPushF,'l'],['Отмена',()=>{DS={};dsave();dsUi();rfs()},'l']])}).catch(derr)}
 function dCheck(){gauth().then(async()=>{const m=await rmeta();gck=true;
-if(!m){await upl(true);toast('Сохранено на Диск');rfs();return}
-if(m.modifiedTime==DS.rm){DS.conflict=0;dsave();if(DS.dirty){await upl(false);toast('Сохранено на Диск')}else toast('На Диске та же версия, обновлений нет');rfs();return}
+if(!m){await upl(true);toast('Сохранено на Google Диск');rfs();return}
+if(m.modifiedTime==DS.rm){DS.conflict=0;dsave();if(DS.dirty){await upl(false);toast('Сохранено на Google Диск')}else toast('На Google Диске та же версия, обновлений нет');rfs();return}
 if(DS.dirty||DS.conflict){DS.conflict=1;dsave();dsUi();dConf(m);return}
-dlg('На Диске более новая версия','База на Диске сохранена '+fdt(m.modifiedTime)+'. Загрузить её на это устройство?',[['Загрузить с Диска',()=>dPull(true)],['Не сейчас',null,'l']])}).catch(derr)}
-function dDisc(){dlg('Отключить Google Диск?','Копия на Диске останется. На этом устройстве автосохранение остановится.',[['Отключить',()=>{try{if(GT&&window.google)google.accounts.oauth2.revoke(GT.tok,()=>{})}catch(e){}GT=null;DS={};dsave();dsUi();toast('Диск отключён');rfs()}],['Отмена',null,'l']])}
+dlg('В Google Диске более новая версия','База в Google Диске (в вашем аккаунте) сохранена '+fdt(m.modifiedTime)+'. Загрузить её в приложение на этом устройстве?',[['Загрузить с Google Диска',()=>dPull(true)],['Не сейчас',null,'l']])}).catch(derr)}
+function dDisc(){dlg('Отключить Google Диск?','Копия на Google Диске останется. На этом устройстве автосохранение остановится.',[['Отключить',()=>{try{if(GT&&window.google)google.accounts.oauth2.revoke(GT.tok,()=>{})}catch(e){}GT=null;DS={};dsave();dsUi();toast('Google Диск отключён');rfs()}],['Отмена',null,'l']])}
 
 function drCard(h){if(!GCID||!DS.on)return '';
-if(DS.conflict)return `<div class="card bk"><b>На Диске другая версия базы</b><p class="mut" style="margin:6px 0 14px">Версия на Диске и версия на этом устройстве расходятся. Выберите, какую оставить.</p><button class="btn" onclick="dCheck()">Разобраться</button></div>`;
-if(DS.dirty&&DS.dsince&&Date.now()-DS.dsince>3*864e5&&Date.now()>(DS.snz||0))return `<div class="card bk"><b>Изменения ещё не сохранены на Диск</b><p class="mut" style="margin:6px 0 14px">Автосохранение работает, пока вход в Google свежий (около часа). Нажмите кнопку, чтобы сохранить сейчас.</p><button class="btn" onclick="dPush()">Сохранить на Диск</button> <button class="btn l" onclick="dLater()">Позже</button></div>`;
+if(DS.conflict)return `<div class="card bk"><b>На Google Диске другая версия базы</b><p class="mut" style="margin:6px 0 14px">Версия на Google Диске и версия на этом устройстве расходятся. Выберите, какую оставить.</p><button class="btn" onclick="dCheck()">Разобраться</button></div>`;
+if(DS.dirty&&DS.dsince&&Date.now()-DS.dsince>3*864e5&&Date.now()>(DS.snz||0))return `<div class="card bk"><b>Изменения ещё не сохранены на Google Диск</b><p class="mut" style="margin:6px 0 14px">Автосохранение работает, пока вход в Google свежий (около часа). Нажмите кнопку, чтобы сохранить сейчас.</p><button class="btn" onclick="dPush()">Сохранить на Google Диск</button> <button class="btn l" onclick="dLater()">Позже</button></div>`;
 return ''}
 function dLater(){DS.snz=Date.now()+3*864e5;dsave();rfs()}
 function dCard(){const st='class="card" style="max-width:560px;margin-top:18px"';
-if(!GCID)return `<div ${st}><h2>Google Диск</h2><p class="mut" style="margin:8px 0 0">Подключение к Диску ещё не настроено.</p></div>`;
-if(!DS.on)return `<div ${st}><div class="eyebrow">Рекомендуется</div><h2 style="margin:4px 0 10px">Автосохранение в Google Диск</h2><p class="mut">Подключите один раз, и клиенты, визиты и памятки будут сами сохраняться в вашем Google Диске. Если сменится телефон или очистится браузер, всё вернётся одной кнопкой. Файл лежит в скрытой папке: его не видно и случайно не удалить. Другие файлы на Диске приложение не видит.</p><button class="btn" onclick="dConn()">Подключить Google Диск</button></div>`;
-return `<div ${st}><div class="eyebrow">Автосохранение</div><h2 style="margin:4px 0 10px">Google Диск подключён</h2><p style="margin:8px 0 0">Состояние: <b>${DS.conflict?'версии расходятся':DS.dirty?'есть изменения, не сохранённые на Диск':'всё сохранено на Диск'}</b></p><p class="mut sm">Последнее сохранение или загрузка: ${DS.last?fdt(DS.last):'—'}. Автосохранение работает, пока вход в Google свежий (около часа), потом нажмите «Сохранить на Диск». На новом устройстве: «Подключить Google Диск» → «Загрузить с Диска».</p>
-<div class="row"><button class="btn" onclick="dPush()">Сохранить на Диск</button><button class="btn l" onclick="dPull()">Загрузить с Диска</button></div>
-<p style="margin:14px 0 0"><a class="ln" tabindex="0" role="button" onclick="dDisc()" onkeydown="if(event.key=='Enter')dDisc()">Отключить Диск</a></p></div>`}
+if(!GCID)return `<div ${st}><h2>Google Диск</h2><p class="mut" style="margin:8px 0 0">Подключение к Google Диску ещё не настроено.</p></div>`;
+if(!DS.on)return `<div ${st}><div class="eyebrow">Рекомендуется</div><h2 style="margin:4px 0 10px">Автосохранение в Google Диск</h2><p class="mut">Подключите один раз, и клиенты, визиты и памятки будут сами сохраняться в вашем Google Диске. Если сменится телефон или очистится браузер, всё вернётся одной кнопкой. Файл лежит в скрытой папке: его не видно и случайно не удалить. Другие файлы на Google Диске приложение не видит.</p><button class="btn" onclick="dConn()">Подключить Google Диск</button></div>`;
+return `<div ${st}><div class="eyebrow">Автосохранение</div><h2 style="margin:4px 0 10px">Google Диск подключён</h2><p style="margin:8px 0 0">Состояние: <b>${DS.conflict?'версии расходятся':DS.dirty?'есть изменения, не сохранённые на Google Диск':'всё сохранено на Google Диск'}</b></p><p class="mut sm">Последнее сохранение или загрузка: ${DS.last?fdt(DS.last):'—'}. Автосохранение работает, пока вход в Google свежий (около часа), потом нажмите «Сохранить на Google Диск». На новом устройстве: «Подключить Google Диск» → «Загрузить с Google Диска».</p>
+<div class="row"><button class="btn" onclick="dPush()">Сохранить на Google Диск</button><button class="btn l" onclick="dPull()">Загрузить с Google Диска</button></div>
+<p style="margin:14px 0 0"><a class="ln" tabindex="0" role="button" onclick="dDisc()" onkeydown="if(event.key=='Enter')dDisc()">Отключить Google Диск</a></p></div>`}
 if(GCID&&DS.on)gload().catch(()=>{});dsUi();
 
 go('home');nac();
