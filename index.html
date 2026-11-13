@@ -267,7 +267,7 @@ let M=nm(),qr='',cur=null,curImg='',DR=[],CC=null,V=null,CV='',SEL=new Set(),VF=
 const GCID='97625365834-ohm2fvlj39cgcirfl1uv2ov4j1dqbsjt.apps.googleusercontent.com',GSC='https://www.googleapis.com/auth/drive.appdata',GFN='kudri-dz-base.json',GK='hcs_drive';
 let DS={},GT=null,GC=null,GP=null,gbusy=false,gtm=null,gck=false,SQ=0,DK=[];try{DS=JSON.parse(localStorage.getItem(GK))||{}}catch(e){DS={}}
 const needsBackup=()=>{const lb=D.meta.lastBackup||D.meta.installedAt;return (D.meta.chg||0)>lb+6e4&&Date.now()-lb>30*864e5&&Date.now()>(D.meta.bsnz||0)};
-const save=()=>{D.meta.chg=Date.now();try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('Не хватает места в браузере. Скачайте копию в «Настройки» → «Сохранение» и удалите лишние фото.')}if(!SQ)dsMark()};
+const save=()=>{D.meta.chg=Date.now();let ok=1;try{localStorage.setItem(K,JSON.stringify(D))}catch(e){ok=0;toast('Не хватает места в браузере. Скачайте копию в «Настройки» → «Сохранение» и удалите лишние фото.')}if(!SQ)dsMark();return ok};
 function toast(t,ms){const e=$('#ts');e.textContent=t;e.style.display='block';clearTimeout(e.t);e.t=setTimeout(()=>e.style.display='none',ms||3200)}
 const sorted=()=>D.cats.filter(c=>!c.arch).sort((a,b)=>a.o-b.o),
 cn=id=>(D.cats.find(c=>c.id==id)||{}).name||'',
@@ -631,8 +631,32 @@ try{await navigator.share({files:[f],title:'Копия базы «Кудри Д�
 async function ex(){const nm='hair-care-backup-'+new Date().toLocaleDateString('en-CA')+'.json',blob=new Blob([JSON.stringify(D)],{type:'application/json'});
  if(window.showSaveFilePicker){try{const h=await showSaveFilePicker({suggestedName:nm,types:[{description:'Резервная копия',accept:{'application/json':['.json']}}]}),w=await h.createWritable();await w.write(blob);await w.close();D.meta.lastBackup=Date.now();save();return toast('Копия сохранена')}catch(e){if(e&&e.name=='AbortError')return}}
  fdl(blob,nm);D.meta.lastBackup=Date.now();save();toast('Копия скачивается в папку «Загрузки». Если ничего не произошло, откройте приложение в обычном браузере (Chrome, Safari), а не внутри мессенджера.')}
-function applyData(d,lb){D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.clients=D.clients||[];D.visits=D.visits||[];if(!D.meta.installedAt)D.meta.installedAt=Date.now();if(lb)D.meta.lastBackup=Date.now();M=nm();CC=null;V=null;mig();migV();migF();linkMV();gc();save()}
-function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.cats||!d.prods)throw 0;applyData(d,true);toast('Копия загружена');go('home')}catch(e){toast('Этот файл не подходит')}};r.readAsText(f)}
+function applyData(d,lb){D=d;D.memos=D.memos||[];D.meta=D.meta||{};D.clients=D.clients||[];D.visits=D.visits||[];if(!D.meta.installedAt)D.meta.installedAt=Date.now();if(lb)D.meta.lastBackup=Date.now();M=nm();CC=null;V=null;mig();migV();migF();linkMV();gc();return save()}
+/* Безопасная загрузка копии: проверка структуры, очистка id/фото/дат, откат при ошибке */
+const IDK=new Set(['id','cid','vid','cat','tid']),MAPK=new Set(['sel','cc','nots','steps']),sid=v=>String(v).replace(/[^\w-]/g,'_').slice(0,60),
+IMR=/^data:image\/(?:jpeg|png|webp|gif);base64,[A-Za-z0-9+\/=]+$/,DTR=/^\d{4}-\d{2}-\d{2}$/;
+function clean(o,dp){if(dp>14||!o||typeof o!='object')return;
+ if(Array.isArray(o)){o.forEach(v=>clean(v,dp+1));return}
+ for(const k of Object.keys(o)){const v=o[k];
+  if(IDK.has(k)&&v!=null&&typeof v!='object')o[k]=sid(v);
+  else if((k=='img'||k=='qr')&&v){if(typeof v!='string'||!IMR.test(v))o[k]=''}
+  else if(k=='date'&&typeof v=='string'){if(v&&!DTR.test(v))o[k]=''}
+  else if(MAPK.has(k)&&v&&typeof v=='object'&&!Array.isArray(v)){const n={};Object.keys(v).forEach(q=>{n[sid(q)]=v[q]});o[k]=n;clean(n,dp+1)}
+  else clean(v,dp+1)}}
+function safeApply(d,lb,quiet){
+ const isO=v=>v&&typeof v=='object'&&!Array.isArray(v);
+ if(!isO(d)||!Array.isArray(d.cats)||!Array.isArray(d.prods))return 'bad';
+ for(const k of ['cats','prods','memos','clients','visits']){if(d[k]==null)continue;if(!Array.isArray(d[k])||!d[k].every(isO))return 'bad'}
+ if(d.set!=null&&!isO(d.set))return 'bad';
+ clean(d,0);
+ const prev=D,prevS=localStorage.getItem(K);let ok=0;
+ if(quiet)SQ=1;
+ try{ok=applyData(d,lb)}catch(e){ok=0}finally{if(quiet)SQ=0}
+ if(ok)return 'ok';
+ D=prev;try{prevS==null?localStorage.removeItem(K):localStorage.setItem(K,prevS)}catch(e){}
+ return 'full'}
+function im(f){if(!f)return;const r=new FileReader();r.onload=()=>{let d;try{d=JSON.parse(r.result)}catch(e){toast('Этот файл не подходит');return}
+ const st=safeApply(d,true);if(st=='ok'){toast('Копия загружена');go('home')}else toast(st=='bad'?'Этот файл не подходит. Ваша база осталась без изменений.':'Не хватает места в браузере для этой копии. Ваша база осталась без изменений.',5000)};r.readAsText(f)}
 
 /* Предпросмотр и PDF (страницы рисуются на canvas, PDF собирается без библиотек) */
 const PW=1240,PH=1754,PXW=1654,PXH=2339,PSC=PXW/PW,MX=90,MT=90,MB=150,CW=PW-2*MX,SE='Lora,Georgia,serif',SA='Manrope,system-ui,sans-serif',
@@ -787,8 +811,13 @@ if(m&&!force&&m.modifiedTime!=DS.rm){DS.conflict=1;dsave();dsUi();return {c:1,m}
 const v0=DS.v||0,j=await rput(m&&m.id,JSON.stringify(D));
 DS.rm=j.modifiedTime;DS.last=Date.now();DS.conflict=0;if((DS.v||0)==v0)DS.dirty=0;dsave();dsUi();gck=true;return {ok:1}}
 finally{gbusy=false}}
-function auto(){if(!DS.on||DS.conflict||gbusy||!tokOk())return;
-upl(false).then(r=>{if(r&&r.c)toast('На Google Диске другая версия базы. Откройте «Настройки» → «Сохранение» и выберите, какую оставить.')}).catch(()=>{})}
+let gtry=0;
+function auto(){if(!DS.on||DS.conflict||!tokOk())return;
+if(gbusy){clearTimeout(gtm);gtm=setTimeout(auto,4000);return}
+upl(false).then(r=>{if(r&&r.busy){clearTimeout(gtm);gtm=setTimeout(auto,4000);return}
+if(r&&r.c){toast('На Google Диске другая версия базы. Откройте «Настройки» → «Сохранение» и выберите, какую оставить.');return}
+gtry=0;if(DS.dirty&&!DS.conflict){clearTimeout(gtm);gtm=setTimeout(auto,2500)}})
+.catch(()=>{if(gtry++<4){clearTimeout(gtm);gtm=setTimeout(auto,Math.min(60000,5000*Math.pow(2,gtry)))}else{gtry=0;toast('Не удалось сохранить на Google Диск. Изменения сохранены в приложении. Попробуйте позже в «Настройки» → «Сохранение».',6000)}})}
 
 function derr(e){const m=String(e&&e.message||e);
 toast(/noid/.test(m)?'Подключение к Google Диску ещё не настроено.':
@@ -796,7 +825,8 @@ toast(/noid/.test(m)?'Подключение к Google Диску ещё не н
 /popup_blocked|popup_failed/.test(m)?'Браузер заблокировал окно входа в Google. Разрешите всплывающие окна и повторите.':
 /popup_closed|access_denied|user/.test(m)?'Вход в Google не выполнен.':
 /auth|http401|http403/.test(m)?'Нет доступа к Google Диску. Нажмите кнопку ещё раз и войдите в Google заново.':
-/bad/.test(m)?'Файл на Google Диске не подходит.':
+/full/.test(m)?'Не хватает места в браузере для этой базы. Скачайте копию в «Настройки» → «Сохранение» и удалите лишние фото.':
+/bad/.test(m)?'Файл на Google Диске не подходит. Ваша база осталась без изменений.':
 /Failed to fetch|NetworkError|Load failed/.test(m)?'Нет связи с интернетом или с Google.':
 'Не удалось связаться с Google Диском ('+m+').')}
 
@@ -808,24 +838,24 @@ function dk(i){const f=DK[i];$('#dg').close();if(f)f()}
 function dConf(m){dlg('В Google Диске другая версия','В Google Диске (в вашем аккаунте Google) есть база, сохранённая '+fdt(m.modifiedTime)+'. На этом устройстве данные менялись отдельно. Выберите, какую версию оставить: вторая будет заменена.',
 [['Взять базу из Google Диска',()=>dPull(true)],['Заменить Google Диск базой с этого устройства',dPushF,'l'],['Отмена',null,'l']])}
 function dPush(){gauth().then(()=>upl(false)).then(r=>{if(r&&r.c)dConf(r.m);else if(r&&r.ok){toast('Сохранено на Google Диск');rfs()}}).catch(derr)}
-function dPushF(){gauth().then(()=>upl(true)).then(()=>{toast('Сохранено на Google Диск');rfs()}).catch(derr)}
+function dPushF(){gauth().then(()=>upl(true)).then(r=>{if(r&&r.ok){toast('Сохранено на Google Диск');rfs()}else toast('Сейчас идёт другая операция. Повторите через секунду.')}).catch(derr)}
 function dPull(force){if(gbusy)return;
 gauth().then(async()=>{const m=await rmeta();
 if(!m){toast('На Google Диске пока нет сохранённой базы');return}
 if(!force&&DS.dirty){dlg('Есть несохранённые изменения','На этом устройстве есть изменения, которых нет в Google Диске. Если взять базу из Google Диска, эти изменения пропадут.',[['Загрузить с Google Диска',()=>dPull(true)],['Отмена',null,'l']]);return}
-gbusy=true;let t;try{t=await rget(m.id)}finally{gbusy=false}
+const chg0=D.meta.chg||0;gbusy=true;let t;try{t=await rget(m.id)}finally{gbusy=false}
 let d;try{d=JSON.parse(t)}catch(e){throw new Error('bad')}
-if(!d||!d.cats||!d.prods)throw new Error('bad');
-SQ=1;try{applyData(d)}finally{SQ=0}
+if((D.meta.chg||0)!=chg0){toast('Пока шла загрузка, в приложении что-то изменилось. Чтобы не потерять изменения, загрузка отменена. Нажмите ещё раз.',5000);return}
+const st=safeApply(d,false,1);if(st!='ok')throw new Error(st=='full'?'full':'bad');
 DS.rm=m.modifiedTime;DS.dirty=0;DS.conflict=0;DS.last=Date.now();dsave();dsUi();gck=true;
 toast('База загружена с Google Диска');go('home')}).catch(derr)}
 function dConn(){gauth().then(async()=>{const m=await rmeta();DS={on:1,conflict:1};dsave();
-if(!m){await upl(true);toast('Google Диск подключён, база сохранена на Google Диск');rfs();return}
+if(!m){const r=await upl(true);if(r&&r.ok)toast('Google Диск подключён, база сохранена на Google Диск');else toast('Google Диск подключён. Нажмите «Сохранить на Google Диск» ещё раз.');rfs();return}
 dlg('В вашем Google Диске уже есть база','В Google Диске (в вашем аккаунте Google, в интернете) найдена база от '+fdt(m.modifiedTime)+'. В приложении на этом устройстве тоже есть своя база. Выберите, какую оставить: вторая будет заменена.',
 [['Взять базу из Google Диска',()=>dPull(true)],['Заменить Google Диск базой с этого устройства',dPushF,'l'],['Отмена',()=>{DS={};dsave();dsUi();rfs()},'l']])}).catch(derr)}
 function dCheck(){gauth().then(async()=>{const m=await rmeta();gck=true;
-if(!m){await upl(true);toast('Сохранено на Google Диск');rfs();return}
-if(m.modifiedTime==DS.rm){DS.conflict=0;dsave();if(DS.dirty){await upl(false);toast('Сохранено на Google Диск')}else toast('На Google Диске та же версия, обновлений нет');rfs();return}
+if(!m){const r=await upl(true);if(r&&r.ok)toast('Сохранено на Google Диск');else toast('Сейчас идёт другая операция. Повторите через секунду.');rfs();return}
+if(m.modifiedTime==DS.rm){DS.conflict=0;dsave();if(DS.dirty){const r=await upl(false);if(r&&r.c){dConf(r.m);return}if(r&&r.ok)toast('Сохранено на Google Диск');else toast('Сейчас идёт другая операция. Повторите через секунду.')}else toast('На Google Диске та же версия, обновлений нет');rfs();return}
 if(DS.dirty||DS.conflict){DS.conflict=1;dsave();dsUi();dConf(m);return}
 dlg('В Google Диске более новая версия','База в Google Диске (в вашем аккаунте) сохранена '+fdt(m.modifiedTime)+'. Загрузить её в приложение на этом устройстве?',[['Загрузить с Google Диска',()=>dPull(true)],['Не сейчас',null,'l']])}).catch(derr)}
 function dDisc(){dlg('Отключить Google Диск?','Копия на Google Диске останется. На этом устройстве автосохранение остановится.',[['Отключить',()=>{try{if(GT&&window.google)google.accounts.oauth2.revoke(GT.tok,()=>{})}catch(e){}GT=null;DS={};dsave();dsUi();toast('Google Диск отключён');rfs()}],['Отмена',null,'l']])}
